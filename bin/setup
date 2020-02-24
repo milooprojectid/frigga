@@ -1,0 +1,5 @@
+# install dependencies
+go get -v all
+
+# build app
+go build ./*.go
