@@ -6,18 +6,15 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris"
-)
 
-func hello(ctx iris.Context) {
-	ctx.JSON(map[string]string{
-		"message": "hello",
-	})
-}
+	telegram "frigga/modules/telegram"
+)
 
 func newApp() *iris.Application {
 	app := iris.Default()
 
-	app.Post("/line", hello)
+	telegramBot := telegram.NewBot(os.Getenv("TELEGRAM_TOKEN"))
+	app.Post("/telegram", telegramBot.Handler)
 
 	return app
 }
