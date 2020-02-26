@@ -63,6 +63,7 @@ func (e *Event) Process(c chan messageReply) {
 func (b *Bot) Handler(ctx iris.Context) {
 	var events []Event
 	if err := ctx.ReadJSON(&events); err != nil {
+		ctx.StatusCode(iris.StatusUnprocessableEntity)
 		ctx.WriteString(err.Error())
 		return
 	}
