@@ -13,8 +13,9 @@ import (
 func newApp() *iris.Application {
 	app := iris.Default()
 
-	telegramBot := telegram.NewBot(os.Getenv("TELEGRAM_TOKEN"))
-	app.Post("/telegram", telegramBot.Handler)
+	telegramToken := os.Getenv("TELEGRAM_TOKEN")
+	telegramBot := telegram.NewBot(telegramToken)
+	app.Post("/telegram/"+telegramToken, telegramBot.Handler)
 
 	return app
 }
