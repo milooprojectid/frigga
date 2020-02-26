@@ -62,7 +62,10 @@ func (e *Event) Process(c chan messageReply) {
 // Handler ...
 func (b *Bot) Handler(ctx iris.Context) {
 	var events []Event
-	ctx.ReadJSON(&events)
+	if err := ctx.ReadJSON(&events); err != nil {
+		ctx.WriteString(err.Error())
+		return
+	}
 
 	replies := make(chan messageReply)
 
@@ -76,6 +79,7 @@ func (b *Bot) Handler(ctx iris.Context) {
 	}
 
 	ctx.JSON(events)
+	return
 }
 
 // Reply ...
