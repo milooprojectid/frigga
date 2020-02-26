@@ -1,8 +1,14 @@
 package telegram
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+
 	"github.com/kataras/iris"
 )
+
+const apiURL = "https://api.telegram.org/bot"
 
 // Bot ...
 type Bot struct {
@@ -40,11 +46,47 @@ type Event struct {
 	Message  message `json:"message"`
 }
 
+type messageReply struct {
+	ChatID  int
+	Message string
+}
+
+// Process ...
+func (e *Event) Process(c chan messageReply) {
+	c <- messageReply{
+		ChatID:  e.Message.Chat.ID,
+		Message: e.Message.Text,
+	}
+}
+
 // Handler ...
 func (b *Bot) Handler(ctx iris.Context) {
 	var events []Event
 	ctx.ReadJSON(&events)
+
+	replies := make(chan messageReply)
+
+	for _, event := range events {
+		go event.Process(replies)
+	}
+
+	for i := 0; i < len(events); i++ {
+		r := <-replies
+		go b.Reply(r.ChatID, r.Message)
+	}
+
 	ctx.JSON(events)
+}
+
+// Reply ...
+func (b *Bot) Reply(chatID int, message string) error {
+	payload := map[string]interface{}{"chat_id": chatID, "text": message}
+	requestBody, _ := json.Marshal(payload)
+
+	if _, err := http.Post(apiURL+b.Token+"/sendMessage", "application/json", bytes.NewBuffer(requestBody)); err != nil {
+		return err
+	}
+	return nil
 }
 
 // NewBot returns new bot instance
