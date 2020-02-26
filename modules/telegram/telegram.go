@@ -9,6 +9,7 @@ import (
 )
 
 const apiURL = "https://api.telegram.org/bot"
+const commands = "You can control me by sending these commands:\n/sentiment - run sentiment analisys on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
 
 // Bot ...
 type Bot struct {
@@ -53,9 +54,38 @@ type messageReply struct {
 
 // Process ...
 func (e *Event) Process(c chan messageReply) {
+	var message string
+
+	switch e.Message.Text {
+	case "/start":
+		{
+			message = "Hi im Miloo\n" + commands
+		}
+	case "/sentiment":
+		{
+			message = "Type the statement you want to analize"
+		}
+	case "/summarize":
+		{
+			message = "Type the statement or url you want to summarise"
+		}
+	case "/end":
+		{
+			message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
+		}
+	default:
+		{
+			if len(e.Message.Text) == 0 {
+				message = "You have to type something ._."
+			} else if string(e.Message.Text[0]) == "/" {
+				message = "I cant understand that command\n" + commands
+			}
+		}
+	}
+
 	c <- messageReply{
 		ChatID:  e.Message.Chat.ID,
-		Message: e.Message.Text,
+		Message: message,
 	}
 }
 
@@ -73,15 +103,6 @@ func (b *Bot) Handler(ctx iris.Context) {
 
 	r := <-replies
 	go b.Reply(r.ChatID, r.Message)
-
-	// for _, event := range events {
-	// 	go event.Process(replies)
-	// }
-
-	// for i := 0; i < len(events); i++ {
-	// 	r := <-replies
-	// 	go b.Reply(r.ChatID, r.Message)
-	// }
 
 	ctx.JSON(event)
 	return
