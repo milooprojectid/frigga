@@ -61,25 +61,29 @@ func (e *Event) Process(c chan messageReply) {
 
 // Handler ...
 func (b *Bot) Handler(ctx iris.Context) {
-	var events []Event
-	if err := ctx.ReadJSON(&events); err != nil {
+	var event Event
+	if err := ctx.ReadJSON(&event); err != nil {
 		ctx.StatusCode(iris.StatusUnprocessableEntity)
 		ctx.WriteString(err.Error())
 		return
 	}
 
 	replies := make(chan messageReply)
+	go event.Process(replies)
 
-	for _, event := range events {
-		go event.Process(replies)
-	}
+	r := <-replies
+	go b.Reply(r.ChatID, r.Message)
 
-	for i := 0; i < len(events); i++ {
-		r := <-replies
-		go b.Reply(r.ChatID, r.Message)
-	}
+	// for _, event := range events {
+	// 	go event.Process(replies)
+	// }
 
-	ctx.JSON(events)
+	// for i := 0; i < len(events); i++ {
+	// 	r := <-replies
+	// 	go b.Reply(r.ChatID, r.Message)
+	// }
+
+	ctx.JSON(event)
 	return
 }
 
