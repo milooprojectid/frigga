@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris"
 
+	driver "frigga/driver"
 	telegram "frigga/modules/telegram"
 )
 
@@ -25,6 +26,8 @@ func main() {
 	if err != nil {
 		log.Fatal("error while loading environment file")
 	}
+
+	driver.InitializeFirestore()
 
 	app := newApp()
 	port := os.Getenv("APP_PORT")

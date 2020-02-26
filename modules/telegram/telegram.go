@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"strconv"
+
+	repo "frigga/modules/repository"
 
 	"github.com/kataras/iris"
 )
 
 const apiURL = "https://api.telegram.org/bot"
-const commands = "You can control me by sending these commands:\n/sentiment - run sentiment analisys on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
+const commands = "You can control me by sending these commands:\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
 
 // Bot ...
 type Bot struct {
@@ -55,32 +58,51 @@ type messageReply struct {
 // Process ...
 func (e *Event) Process(c chan messageReply) {
 	var message string
+	var input string = e.Message.Text
+	var chatID string = strconv.Itoa(e.Message.Chat.ID)
 
-	switch e.Message.Text {
+	switch input {
 	case "/start":
 		{
 			message = "Hi im Miloo\n" + commands
+			repo.InitSession(chatID, e.Message.Chat.FirstName, e.Message.Chat.LastName)
 		}
 	case "/sentiment":
 		{
 			message = "Type the statement you want to analize"
+			repo.UpdateSession(chatID, input)
 		}
 	case "/summarize":
 		{
 			message = "Type the statement or url you want to summarise"
+			repo.UpdateSession(chatID, input)
 		}
-	case "/end":
+	case "/cancel":
 		{
 			message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
 		}
 	default:
 		{
-			if len(e.Message.Text) == 0 {
-				message = "You have to type something ._."
-			} else if string(e.Message.Text[0]) == "/" {
-				message = "I cant understand that command\n" + commands
-			}
+			message = ""
 		}
+	}
+
+	if message == "" {
+		if len(input) == 0 {
+			message = "You have to type something ._."
+		} else if string(input[0]) == "/" {
+			message = "I cant understand that command\n" + commands
+		}
+
+		if command, _ := repo.GetSession(chatID); command == "" {
+			message = "Hmmm, theres no active command >_<"
+		} else if command == "/summarize" {
+			message = e.Message.Text // call service
+		} else if command == "/sentiment" {
+			message = e.Message.Text // call service
+		}
+
+		repo.UpdateSession(chatID, "")
 	}
 
 	c <- messageReply{
