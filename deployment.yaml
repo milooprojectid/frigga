@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frigga-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frigga-service
+  template:
+    metadata:
+      labels:
+        app: frigga-service
+    spec:
+      containers:
+        - name: frigga-service
+          image: asia.gcr.io/miloo-phoenix/frigga
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frigga-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    app: frigga-service
+  ports:
+    - port: 8030
+      targetPort: 8080
