@@ -33,5 +33,4 @@ func InitializeFirestore() {
 
 	FS = client
 	FSContext = &ctx
-	// defer client.Close()
 }
