@@ -97,7 +97,7 @@ func (e *Event) Process(c chan messageReply) {
 		{
 			if command, _ := repo.GetSession(chatID); command == "" {
 				message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
-			} else if command, _ := repo.GetSession(chatID); command == "" {
+			} else {
 				message = "Command cancelled"
 				repo.UpdateSession(chatID, "")
 			}
