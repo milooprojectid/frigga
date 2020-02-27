@@ -7,12 +7,28 @@ import (
 	"strconv"
 
 	repo "frigga/modules/repository"
+	s "frigga/modules/service"
 
 	"github.com/kataras/iris"
 )
 
 const apiURL = "https://api.telegram.org/bot"
 const commands = "You can control me by sending these commands:\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
+
+type sentimentResult struct {
+	Data struct {
+		Class       int    `json:"class"`
+		Description string `json:"description"`
+	} `json:"data"`
+	Message string `json:"message"`
+}
+
+type summarizationResult struct {
+	Data struct {
+		Summary string `json:"summary"`
+	} `json:"data"`
+	Message string `json:"message"`
+}
 
 // Bot ...
 type Bot struct {
@@ -79,7 +95,12 @@ func (e *Event) Process(c chan messageReply) {
 		}
 	case "/cancel":
 		{
-			message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
+			if command, _ := repo.GetSession(chatID); command == "" {
+				message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
+			} else if command, _ := repo.GetSession(chatID); command == "" {
+				message = "Command cancelled"
+				repo.UpdateSession(chatID, "")
+			}
 		}
 	default:
 		{
@@ -97,9 +118,15 @@ func (e *Event) Process(c chan messageReply) {
 		if command, _ := repo.GetSession(chatID); command == "" {
 			message = "Hmmm, theres no active command >_<"
 		} else if command == "/summarize" {
-			message = e.Message.Text // call service
+			var result summarizationResult
+			service, _ := s.GetService("storm")
+			service.Call("summarizeText", map[string]string{"text": input}, &result)
+			message = result.Data.Summary
 		} else if command == "/sentiment" {
-			message = e.Message.Text // call service
+			var result sentimentResult
+			service, _ := s.GetService("morbius")
+			service.Call("sentiment", map[string]string{"text": input}, &result)
+			message = result.Data.Description
 		}
 
 		repo.UpdateSession(chatID, "")
