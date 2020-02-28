@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	d "frigga/driver"
+	d "frigga/modules/driver"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -35,7 +35,6 @@ func InitSession(sessionID, firstName, lastName string) error {
 // UpdateSession ...
 func UpdateSession(sessionID, command string) error {
 	ctx := context.Background()
-
 	_, err := d.FS.Doc("bots/telegram/sessions/"+sessionID).Update(ctx, []firestore.Update{{Path: "command", Value: command}})
 	if err != nil {
 		return err

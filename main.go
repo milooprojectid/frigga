@@ -7,7 +7,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris"
 
-	driver "frigga/driver"
+	driver "frigga/modules/driver"
+	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
 )
 
@@ -28,6 +29,7 @@ func main() {
 	}
 
 	driver.InitializeFirestore()
+	service.InitializeServices()
 
 	app := newApp()
 	port := os.Getenv("APP_PORT")

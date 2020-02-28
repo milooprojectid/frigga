@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	repo "frigga/modules/repository"
-	s "frigga/modules/service"
+	service "frigga/modules/service"
 
 	"github.com/kataras/iris"
 )
@@ -119,14 +119,12 @@ func (e *Event) Process(c chan messageReply) {
 			message = "Hmmm, theres no active command >_<"
 		} else if command == "/summarize" {
 			var result summarizationResult
-			service, _ := s.GetService("storm")
-			service.Call("summarizeText", map[string]string{"text": input}, &result)
+			service.All.CallSync("storm", "summarizeText", map[string]string{"text": input}, &result)
 			message = result.Data.Summary
 			repo.LogHistory(chatID, command, input, message)
 		} else if command == "/sentiment" {
 			var result sentimentResult
-			service, _ := s.GetService("morbius")
-			service.Call("sentiment", map[string]string{"text": input}, &result)
+			service.All.CallSync("morbius", "sentiment", map[string]string{"text": input}, &result)
 			message = result.Data.Description
 			repo.LogHistory(chatID, command, input, message)
 		}

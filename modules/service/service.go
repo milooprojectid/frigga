@@ -11,25 +11,31 @@ import (
 
 // Service ...
 type Service struct {
-	Name      string
-	Endpoint  string
-	Protocol  string
-	Functions map[string]string
+	Name     string
+	Endpoint string
+	Protocol string
+	Methods  map[string]string
 }
 
-// Call ...
-func (s *Service) Call(method string, payload interface{}, output interface{}) error {
-	// var result map[string]interface{}
+type serviceMap map[string]Service
 
-	path, ok := s.Functions[method]
+// CallSync ...
+func (s *serviceMap) CallSync(serviceName string, methodName string, payload interface{}, output interface{}) error {
+
+	service, ok := (*s)[serviceName]
 	if !ok {
-		return errors.New("No function registered")
+		return errors.New("No service registered")
+	}
+
+	path, ok := service.Methods[methodName]
+	if !ok {
+		return errors.New("No methos registered")
 	}
 
 	requestBody, _ := json.Marshal(payload)
-	httpReponse, err := http.Post(s.Endpoint+"/"+path, "application/json", bytes.NewBuffer(requestBody))
+	httpReponse, err := http.Post(service.Endpoint+"/"+path, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
-		return errors.New("No function registered")
+		return errors.New("Failed calling service method")
 	}
 
 	body, _ := ioutil.ReadAll(httpReponse.Body)
@@ -39,31 +45,29 @@ func (s *Service) Call(method string, payload interface{}, output interface{}) e
 	return nil
 }
 
-// GetService ...
-func GetService(name string) (Service, error) {
-	switch name {
-	case "morbius":
-		return Service{
+// All ...
+var All serviceMap
+
+// InitializeServices ...
+func InitializeServices() error {
+	All = serviceMap{
+		"morbius": Service{
 			Name:     "Morbius",
 			Endpoint: os.Getenv("SERVICE_MORBIUS_URL"),
 			Protocol: "TCP",
-			Functions: map[string]string{
+			Methods: map[string]string{
 				"sentiment": "",
 			},
-		}, nil
-
-	case "storm":
-		return Service{
+		},
+		"storm": Service{
 			Name:     "Storm",
 			Endpoint: os.Getenv("SERVICE_STORM_URL"),
 			Protocol: "TCP",
-			Functions: map[string]string{
+			Methods: map[string]string{
 				"summarizeText": "",
 				"summarizeLink": "/link",
 			},
-		}, nil
-
-	default:
-		return Service{}, errors.New("Unknown Service")
+		},
 	}
+	return nil
 }
