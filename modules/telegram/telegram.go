@@ -122,11 +122,13 @@ func (e *Event) Process(c chan messageReply) {
 			service, _ := s.GetService("storm")
 			service.Call("summarizeText", map[string]string{"text": input}, &result)
 			message = result.Data.Summary
+			repo.LogHistory(chatID, command, input, message)
 		} else if command == "/sentiment" {
 			var result sentimentResult
 			service, _ := s.GetService("morbius")
 			service.Call("sentiment", map[string]string{"text": input}, &result)
 			message = result.Data.Description
+			repo.LogHistory(chatID, command, input, message)
 		}
 
 		repo.UpdateSession(chatID, "")

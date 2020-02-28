@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	d "frigga/driver"
+	"time"
 
 	"cloud.google.com/go/firestore"
 )
@@ -11,6 +12,13 @@ type session struct {
 	Command   string `firestore:"command"`
 	FirstName string `firestore:"firstName"`
 	LastName  string `firestore:"lastName"`
+}
+
+type history struct {
+	Command   string `firestore:"command"`
+	Payload   string `firestore:"payload"`
+	Output    string `firestore:"output"`
+	Timestamp int64  `firestore:"timestamp"`
 }
 
 // InitSession ...
@@ -51,4 +59,19 @@ func GetSession(sessionID string) (string, error) {
 	}
 
 	return session.Command, nil
+}
+
+// LogHistory ...
+func LogHistory(sessionID, command, payload, output string) error {
+	history := history{
+		Command:   command,
+		Payload:   payload,
+		Output:    output,
+		Timestamp: time.Now().Unix(),
+	}
+
+	ctx := context.Background()
+	_, _, err := d.FS.Collection("bots/telegram/sessions/"+sessionID+"/history").Add(ctx, history)
+
+	return err
 }
