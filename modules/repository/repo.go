@@ -15,10 +15,10 @@ type session struct {
 }
 
 type history struct {
-	Command   string `firestore:"command"`
-	Payload   string `firestore:"payload"`
-	Output    string `firestore:"output"`
-	Timestamp int64  `firestore:"timestamp"`
+	Command   string    `firestore:"command"`
+	Payload   string    `firestore:"payload"`
+	Output    string    `firestore:"output"`
+	Timestamp time.Time `firestore:"timestamp"`
 }
 
 // InitSession ...
@@ -67,7 +67,7 @@ func LogHistory(sessionID, command, payload, output string) error {
 		Command:   command,
 		Payload:   payload,
 		Output:    output,
-		Timestamp: time.Now().Unix(),
+		Timestamp: time.Now(),
 	}
 
 	ctx := context.Background()
