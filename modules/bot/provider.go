@@ -73,7 +73,7 @@ func GetProvider(name string) Provider {
 					return events, nil
 				},
 				EventReplier: func(rep eventReply) {
-					line.EventReplier(rep.Message, rep.Token)
+					line.EventReplier(rep.Token, rep.Message, os.Getenv("LINE_TOKEN"))
 				},
 			}
 

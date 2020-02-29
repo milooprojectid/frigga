@@ -21,9 +21,9 @@ func EventAdapter(ctx iris.Context) ([]Event, error) {
 }
 
 // EventReplier ...
-func EventReplier(message string, token string) error {
+func EventReplier(replyToken string, message string, accessToken string) error {
 	payload := map[string]interface{}{
-		"replyToken": token,
+		"replyToken": replyToken,
 		"messages": []map[string]string{
 			{"type": "text", "text": message},
 		},
@@ -37,7 +37,7 @@ func EventReplier(message string, token string) error {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	_, err = client.Do(req)
 	if err != nil {
