@@ -48,8 +48,8 @@ type message struct {
 	Text      string `json:"text,omitempty"`
 }
 
-// Event ...
-type Event struct {
+// Update ...
+type Update struct {
 	UpdateID int     `json:"update_id"`
 	Message  message `json:"message"`
 }

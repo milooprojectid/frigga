@@ -10,15 +10,14 @@ import (
 	bot "frigga/modules/bot"
 	driver "frigga/modules/driver"
 	service "frigga/modules/service"
-	telegram "frigga/modules/telegram"
 )
 
 func newApp() *iris.Application {
 	app := iris.Default()
 
-	telegramToken := os.Getenv("TELEGRAM_TOKEN")
-	telegramBot := telegram.New(telegramToken)
-	app.Post("/telegram/"+telegramToken, telegramBot.Handler)
+	telegram := bot.GetProvider("telegram")
+	teleBot := bot.New(telegram)
+	app.Post("/telegram/"+telegram.AccessToken, teleBot.Handler)
 
 	return app
 }
@@ -29,6 +28,7 @@ func main() {
 		log.Fatal("error while loading environment file")
 	}
 
+	// initialize singletons
 	driver.InitializeFirestore()
 	service.InitializeServices()
 	bot.RegisterCommands()
