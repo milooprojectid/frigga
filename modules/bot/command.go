@@ -15,8 +15,8 @@ type commandhandler func() ([]string, error)
 type Command struct {
 	Name     string
 	Path     string
-	Trigger  func(param ...interface{}) ([]string, error)
-	Feedback func(param ...interface{}) ([]string, error)
+	Trigger  func(ID string) ([]string, error)
+	Feedback func(ID string, input string) ([]string, error)
 }
 
 type commands []Command
@@ -78,27 +78,33 @@ func RegisterCommands() {
 		Feedback: sentimentCommandFeedback,
 	}
 
+	summarizeCommand := Command{
+		Name:     "Summarization",
+		Path:     "/summarize",
+		Trigger:  summarizeCommandTrigger,
+		Feedback: summarizeCommandFeedback,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
 		cancelCommand,
 		sentimentCommand,
+		summarizeCommand,
 	}
 }
 
 // explicit handler
 
-func startCommandTrigger(param ...interface{}) ([]string, error) {
-	ID := param[0].(string)
+func startCommandTrigger(ID string) ([]string, error) {
 	InitSession(ID)
 	return []string{
 		"Hi im Miloo\n" + commandText,
 	}, nil
 }
 
-func cancelCommandTrigger(param ...interface{}) ([]string, error) {
+func cancelCommandTrigger(ID string) ([]string, error) {
 	var message string
-	ID := param[0].(string)
 
 	if command, _ := GetSession(ID); command == "" {
 		message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
@@ -112,22 +118,41 @@ func cancelCommandTrigger(param ...interface{}) ([]string, error) {
 	}, nil
 }
 
-func sentimentCommandTrigger(param ...interface{}) ([]string, error) {
-	ID := param[0].(string)
+func sentimentCommandTrigger(ID string) ([]string, error) {
 	UpdateSession(ID, "/sentiment")
 	return []string{
 		"Type the statement you want to analize",
 	}, nil
 }
 
-func sentimentCommandFeedback(param ...interface{}) ([]string, error) {
+func sentimentCommandFeedback(ID string, input string) ([]string, error) {
 	var result service.SentimentResult
-	ID := param[0].(string)
-	input := param[1].(string)
 	cmd := "/sentiment"
 
 	service.All.CallSync("morbius", "sentiment", map[string]string{"text": input}, &result)
 	message := result.Data.Description
+
+	LogSession(ID, cmd, input, message)
+	UpdateSession(ID, "")
+
+	return []string{
+		message,
+	}, nil
+}
+
+func summarizeCommandTrigger(ID string) ([]string, error) {
+	UpdateSession(ID, "/summarize")
+	return []string{
+		"Type the statement or url you want to summarise",
+	}, nil
+}
+
+func summarizeCommandFeedback(ID string, input string) ([]string, error) {
+	var result service.SummarizationResult
+	cmd := "/summarize"
+
+	service.All.CallSync("storm", "summarizeText", map[string]string{"text": input}, &result)
+	message := result.Data.Summary
 
 	LogSession(ID, cmd, input, message)
 	UpdateSession(ID, "")
