@@ -4,6 +4,7 @@ import (
 	"os"
 	"strconv"
 
+	"frigga/modules/line"
 	telegram "frigga/modules/telegram"
 
 	"github.com/kataras/iris"
@@ -41,6 +42,38 @@ func GetProvider(name string) Provider {
 				},
 				EventReplier: func(rep eventReply) {
 					telegram.EventReplier(rep.Token, rep.Message, os.Getenv("TELEGRAM_TOKEN"))
+				},
+			}
+
+		}
+
+	case "line":
+		{
+			provider = Provider{
+				Name:        name,
+				AccessToken: os.Getenv("LINE_TOKEN"),
+				EventAdapter: func(ctx iris.Context) ([]Event, error) {
+					var events []Event
+					updates, _ := line.EventAdapter(ctx)
+					for _, update := range updates {
+						if update.Type == "text" {
+							events = append(events, Event{
+								ID:      update.Source.UserID,
+								Message: update.Message.Text,
+								Token:   update.ReplyToken,
+							})
+						} else if update.Type == "follow" {
+							events = append(events, Event{
+								ID:      update.Source.UserID,
+								Message: "/start",
+								Token:   update.ReplyToken,
+							})
+						}
+					}
+					return events, nil
+				},
+				EventReplier: func(rep eventReply) {
+					line.EventReplier(rep.Message, rep.Token)
 				},
 			}
 

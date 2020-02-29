@@ -16,8 +16,13 @@ func newApp() *iris.Application {
 	app := iris.Default()
 
 	telegram := bot.GetProvider("telegram")
+	line := bot.GetProvider("line")
+
 	teleBot := bot.New(telegram)
+	lineBot := bot.New(line)
+
 	app.Post("/telegram/"+telegram.AccessToken, teleBot.Handler)
+	app.Post("/line", lineBot.Handler)
 
 	return app
 }
