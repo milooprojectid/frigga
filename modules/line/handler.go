@@ -13,13 +13,11 @@ const apiURL = "https://api.line.me/v2/bot"
 
 // EventAdapter ...
 func EventAdapter(ctx iris.Context) ([]Event, error) {
-	var event Event
-	if err := ctx.ReadJSON(&event); err != nil {
-		return []Event{}, err
+	var request Request
+	if err := ctx.ReadJSON(&request); err != nil {
+		return request.Events, err
 	}
-	return []Event{
-		event,
-	}, nil
+	return request.Events, nil
 }
 
 // EventReplier ...

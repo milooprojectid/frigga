@@ -16,3 +16,9 @@ type Event struct {
 		Text string `json:"text"`
 	} `json:"message"`
 }
+
+// Request ...
+type Request struct {
+	Destination string  `json:"destination"`
+	Events      []Event `json:"events"`
+}
