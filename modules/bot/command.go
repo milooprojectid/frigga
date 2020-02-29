@@ -50,9 +50,16 @@ func RegisterCommands() {
 		Trigger: startCommandTrigger,
 	}
 
+	cancelCommand := Command{
+		Name:    "Cancel",
+		Path:    "/cancel",
+		Trigger: cancelCommandTrigger,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
+		cancelCommand,
 	}
 }
 
@@ -63,5 +70,21 @@ func startCommandTrigger(param ...interface{}) ([]string, error) {
 	InitSession(ID)
 	return []string{
 		"Hi im Miloo\n" + commandText,
+	}, nil
+}
+
+func cancelCommandTrigger(param ...interface{}) ([]string, error) {
+	var message string
+	ID := param[0].(string)
+
+	if command, _ := GetSession(ID); command == "" {
+		message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
+	} else {
+		message = "Command cancelled"
+		UpdateSession(ID, "")
+	}
+
+	return []string{
+		message,
 	}, nil
 }

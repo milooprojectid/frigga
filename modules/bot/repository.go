@@ -4,10 +4,12 @@ import (
 	"context"
 	d "frigga/modules/driver"
 	"time"
+
+	"cloud.google.com/go/firestore"
 )
 
 type session struct {
-	ActiveCommand string `firestore:"command"`
+	ActiveCommand string `firestore:"activeCommand"`
 	UserID        string `firestore:"userId"`
 }
 
@@ -30,44 +32,44 @@ func InitSession(sessionID string) error {
 }
 
 // UpdateSession ...
-// func UpdateSession(sessionID, command string) error {
-// 	ctx := context.Background()
-// 	_, err := d.FS.Doc("bots/"+b.Provider.Name+"/sessions/"+sessionID).Update(ctx, []firestore.Update{{Path: "command", Value: command}})
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func UpdateSession(sessionID, command string) error {
+	ctx := context.Background()
+	_, err := d.FS.Doc("bot_sessions/"+sessionID).Update(ctx, []firestore.Update{{Path: "activeCommand", Value: command}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 // GetSession ...
-// func GetSession(sessionID string) (string, error) {
-// 	var command string
-// 	var session session
+func GetSession(sessionID string) (string, error) {
+	var command string
+	var session session
 
-// 	ctx := context.Background()
-// 	docsnap, err := d.FS.Doc("bots/" + b.Provider.Name + "/sessions/" + sessionID).Get(ctx)
-// 	if err != nil {
-// 		return command, err
-// 	}
+	ctx := context.Background()
+	docsnap, err := d.FS.Doc("bot_sessions/" + sessionID).Get(ctx)
+	if err != nil {
+		return command, err
+	}
 
-// 	if err := docsnap.DataTo(&session); err != nil {
-// 		return command, err
-// 	}
+	if err := docsnap.DataTo(&session); err != nil {
+		return command, err
+	}
 
-// 	return session.ActiveCommand, nil
-// }
+	return session.ActiveCommand, nil
+}
 
-// LogHistory ...
-// func LogHistory(sessionID, command, input, output string) error {
-// 	history := history{
-// 		Command:   command,
-// 		Input:     input,
-// 		Output:    output,
-// 		Timestamp: time.Now(),
-// 	}
+// LogSession ...
+func LogSession(sessionID, command, input, output string) error {
+	history := history{
+		Command:   command,
+		Input:     input,
+		Output:    output,
+		Timestamp: time.Now(),
+	}
 
-// 	ctx := context.Background()
-// 	_, _, err := d.FS.Collection("bots/"+b.Provider.Name+"/sessions/"+sessionID+"/history").Add(ctx, history)
+	ctx := context.Background()
+	_, _, err := d.FS.Collection("bot_sessions/"+sessionID+"/history").Add(ctx, history)
 
-// 	return err
-// }
+	return err
+}
