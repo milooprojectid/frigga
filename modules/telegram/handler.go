@@ -8,6 +8,8 @@ import (
 	"github.com/kataras/iris"
 )
 
+const apiURL = "https://api.telegram.org/bot"
+
 // EventAdapter ...
 func EventAdapter(ctx iris.Context) ([]Update, error) {
 	var update Update

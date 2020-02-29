@@ -1,9 +1,13 @@
 package bot
 
-const commandText = "You can control me by sending these commands:	\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
+import (
+	"frigga/modules/service"
+)
 
 // Commands containts all command available
 var Commands commands
+
+const commandText = "You can control me by sending these commands:	\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
 
 type commandhandler func() ([]string, error)
 
@@ -17,25 +21,36 @@ type Command struct {
 
 type commands []Command
 
+func (cs *commands) getCommand(path string) *Command {
+	var command *Command
+
+	for _, c := range Commands {
+		if c.Path == path {
+			command = &c
+			break
+		}
+	}
+
+	return command
+}
+
 func (cs *commands) execute(event Event) eventReply {
 	var command *Command
 	var reply eventReply
 
-	for _, c := range Commands {
-		if c.Path == event.Message {
-			command = &c
-		}
-	}
-
-	if command == nil {
-		reply = eventReply{"I cant understand that command ._.", event.Token}
-	}
-
 	if event.isTrigger() {
-		messages, _ := command.Trigger(event.ID)
-		reply = eventReply{messages[0], event.Token}
+		if command = cs.getCommand(event.Message); command == nil {
+			reply = eventReply{"I dont know that command ._.", event.Token}
+		} else {
+			messages, _ := command.Trigger(event.ID)
+			reply = eventReply{messages[0], event.Token}
+		}
+
+	} else if cmd, _ := GetSession(event.ID); cmd == "" {
+		reply = eventReply{"No active command", event.Token}
 	} else {
-		messages, _ := command.Feedback(event.ID)
+		command = cs.getCommand(cmd)
+		messages, _ := command.Feedback(event.ID, event.Message)
 		reply = eventReply{messages[0], event.Token}
 	}
 
@@ -56,10 +71,18 @@ func RegisterCommands() {
 		Trigger: cancelCommandTrigger,
 	}
 
+	sentimentCommand := Command{
+		Name:     "Sentiment",
+		Path:     "/sentiment",
+		Trigger:  sentimentCommandTrigger,
+		Feedback: sentimentCommandFeedback,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
 		cancelCommand,
+		sentimentCommand,
 	}
 }
 
@@ -83,6 +106,31 @@ func cancelCommandTrigger(param ...interface{}) ([]string, error) {
 		message = "Command cancelled"
 		UpdateSession(ID, "")
 	}
+
+	return []string{
+		message,
+	}, nil
+}
+
+func sentimentCommandTrigger(param ...interface{}) ([]string, error) {
+	ID := param[0].(string)
+	UpdateSession(ID, "/sentiment")
+	return []string{
+		"Type the statement you want to analize",
+	}, nil
+}
+
+func sentimentCommandFeedback(param ...interface{}) ([]string, error) {
+	var result service.SentimentResult
+	ID := param[0].(string)
+	input := param[1].(string)
+	cmd := "/sentiment"
+
+	service.All.CallSync("morbius", "sentiment", map[string]string{"text": input}, &result)
+	message := result.Data.Description
+
+	LogSession(ID, cmd, input, message)
+	UpdateSession(ID, "")
 
 	return []string{
 		message,

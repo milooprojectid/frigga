@@ -19,6 +19,23 @@ type Service struct {
 
 type serviceMap map[string]Service
 
+// SentimentResult ...
+type SentimentResult struct {
+	Data struct {
+		Class       int    `json:"class"`
+		Description string `json:"description"`
+	} `json:"data"`
+	Message string `json:"message"`
+}
+
+// SummarizationResult ...
+type SummarizationResult struct {
+	Data struct {
+		Summary string `json:"summary"`
+	} `json:"data"`
+	Message string `json:"message"`
+}
+
 // CallSync ...
 func (s *serviceMap) CallSync(serviceName string, methodName string, payload interface{}, output interface{}) error {
 
