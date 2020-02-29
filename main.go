@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris"
 
+	bot "frigga/modules/bot"
 	driver "frigga/modules/driver"
 	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
@@ -16,7 +17,7 @@ func newApp() *iris.Application {
 	app := iris.Default()
 
 	telegramToken := os.Getenv("TELEGRAM_TOKEN")
-	telegramBot := telegram.NewBot(telegramToken)
+	telegramBot := telegram.New(telegramToken)
 	app.Post("/telegram/"+telegramToken, telegramBot.Handler)
 
 	return app
@@ -30,6 +31,7 @@ func main() {
 
 	driver.InitializeFirestore()
 	service.InitializeServices()
+	bot.RegisterCommands()
 
 	app := newApp()
 	port := os.Getenv("APP_PORT")
