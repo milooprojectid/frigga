@@ -56,7 +56,7 @@ func GetProvider(name string) Provider {
 					var events []Event
 					updates, _ := line.EventAdapter(ctx)
 					for _, update := range updates {
-						if update.Type == "text" {
+						if update.Type == "message" {
 							events = append(events, Event{
 								ID:      update.Source.UserID,
 								Message: update.Message.Text,
