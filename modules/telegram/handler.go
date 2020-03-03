@@ -58,7 +58,7 @@ func GetUserName(chatID string) (string, error) {
 
 	name = profile.Result.FirstName
 	if profile.Result.LastName != "" {
-		name = name + "" + profile.Result.LastName
+		name = name + " " + profile.Result.LastName
 	}
 
 	return name, nil
