@@ -37,7 +37,10 @@ func EventReplier(chatID string, message string, token string) error {
 
 // GetUserName ...
 func GetUserName(chatID string) (string, error) {
-	var chat chat
+	var profile struct {
+		OK     bool `json:"ok"`
+		Result chat `json:"result"`
+	}
 	var name string
 
 	token := os.Getenv("TELEGRAM_TOKEN")
@@ -50,12 +53,12 @@ func GetUserName(chatID string) (string, error) {
 	}
 
 	body, _ := ioutil.ReadAll(response.Body)
-	json.Unmarshal(body, &chat)
+	json.Unmarshal(body, &profile)
 	defer response.Body.Close()
 
-	name = chat.FirstName
-	if chat.LastName != "" {
-		name = name + "" + chat.LastName
+	name = profile.Result.FirstName
+	if profile.Result.LastName != "" {
+		name = name + "" + profile.Result.LastName
 	}
 
 	return name, nil
