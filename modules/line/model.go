@@ -22,3 +22,10 @@ type Request struct {
 	Destination string  `json:"destination"`
 	Events      []Event `json:"events"`
 }
+
+type userProfile struct {
+	DisplayName   string `json:"displayName"`
+	UserID        string `json:"userId"`
+	PictureURL    string `json:"pictureUrl"`
+	StatusMessage string `json:"statusMessage"`
+}

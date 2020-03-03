@@ -1,7 +1,9 @@
 package bot
 
 import (
+	line "frigga/modules/line"
 	"frigga/modules/service"
+	telegram "frigga/modules/telegram"
 )
 
 // Commands containts all command available
@@ -42,7 +44,7 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 		if command = cs.getCommand(event.Message); command == nil {
 			reply = eventReply{[]string{"I dont know that command ._."}, event.Token}
 		} else {
-			messages, _ := command.Trigger(event.ID)
+			messages, _ := command.Trigger(event.ID, provider)
 			reply = eventReply{messages, event.Token}
 		}
 
@@ -98,8 +100,18 @@ func RegisterCommands() {
 
 func startCommandTrigger(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
+	var provider = payload[1].(string)
+	var getter func(id string) (string, error)
 
-	InitSession(ID)
+	switch provider {
+	case "telegram":
+		getter = telegram.GetUserName
+	case "line":
+		getter = line.GetUserName
+	}
+
+	name, _ := getter(ID)
+	InitSession(ID, name)
 
 	return []string{
 		"Hi im Miloo\n" + commandText,

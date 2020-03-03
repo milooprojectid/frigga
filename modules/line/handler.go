@@ -3,7 +3,9 @@ package line
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/kataras/iris"
@@ -48,4 +50,30 @@ func EventReplier(replyToken string, messages []string, accessToken string) erro
 	}
 
 	return nil
+}
+
+// GetUserName ...
+func GetUserName(userID string) (string, error) {
+	var profile userProfile
+	token := os.Getenv("LINE_TOKEN")
+
+	client := &http.Client{Timeout: time.Second * 60}
+	req, err := http.NewRequest("GET", apiURL+"/profile/"+userID, nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	response, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+
+	body, _ := ioutil.ReadAll(response.Body)
+	json.Unmarshal(body, &profile)
+	defer response.Body.Close()
+
+	return profile.DisplayName, nil
 }
