@@ -8,8 +8,8 @@ type Event struct {
 }
 
 type eventReply struct {
-	Message string
-	Token   string
+	Messages []string
+	Token    string
 }
 
 func (e Event) isTrigger() bool {

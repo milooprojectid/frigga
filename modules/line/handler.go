@@ -21,12 +21,15 @@ func EventAdapter(ctx iris.Context) ([]Event, error) {
 }
 
 // EventReplier ...
-func EventReplier(replyToken string, message string, accessToken string) error {
+func EventReplier(replyToken string, messages []string, accessToken string) error {
+	var replyMessages []map[string]string
+	for _, message := range messages {
+		replyMessages = append(replyMessages, map[string]string{"type": "text", "text": message})
+	}
+
 	payload := map[string]interface{}{
 		"replyToken": replyToken,
-		"messages": []map[string]string{
-			{"type": "text", "text": message},
-		},
+		"messages":   replyMessages,
 	}
 	requestBody, _ := json.Marshal(payload)
 

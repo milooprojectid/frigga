@@ -40,18 +40,18 @@ func (cs *commands) execute(event Event) eventReply {
 
 	if event.isTrigger() {
 		if command = cs.getCommand(event.Message); command == nil {
-			reply = eventReply{"I dont know that command ._.", event.Token}
+			reply = eventReply{[]string{"I dont know that command ._."}, event.Token}
 		} else {
 			messages, _ := command.Trigger(event.ID)
-			reply = eventReply{messages[0], event.Token}
+			reply = eventReply{messages, event.Token}
 		}
 
 	} else if cmd, _ := GetSession(event.ID); cmd == "" {
-		reply = eventReply{"No active command", event.Token}
+		reply = eventReply{[]string{"No active command"}, event.Token}
 	} else {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event.ID, event.Message)
-		reply = eventReply{messages[0], event.Token}
+		reply = eventReply{messages, event.Token}
 	}
 
 	return reply

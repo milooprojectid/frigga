@@ -41,7 +41,9 @@ func GetProvider(name string) Provider {
 					return events, nil
 				},
 				EventReplier: func(rep eventReply) {
-					telegram.EventReplier(rep.Token, rep.Message, os.Getenv("TELEGRAM_TOKEN"))
+					for _, message := range rep.Messages {
+						telegram.EventReplier(rep.Token, message, os.Getenv("TELEGRAM_TOKEN"))
+					}
 				},
 			}
 
@@ -73,7 +75,7 @@ func GetProvider(name string) Provider {
 					return events, nil
 				},
 				EventReplier: func(rep eventReply) {
-					line.EventReplier(rep.Token, rep.Message, os.Getenv("LINE_TOKEN"))
+					line.EventReplier(rep.Token, rep.Messages, os.Getenv("LINE_TOKEN"))
 				},
 			}
 
