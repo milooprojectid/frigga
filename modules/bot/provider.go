@@ -25,9 +25,10 @@ func GetProvider(name string) Provider {
 	switch name {
 	case "telegram":
 		{
+			token := os.Getenv("TELEGRAM_TOKEN")
 			provider = Provider{
 				Name:        name,
-				AccessToken: os.Getenv("TELEGRAM_TOKEN"),
+				AccessToken: token,
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
 					updates, _ := telegram.EventAdapter(ctx)
@@ -42,7 +43,7 @@ func GetProvider(name string) Provider {
 				},
 				EventReplier: func(rep eventReply) {
 					for _, message := range rep.Messages {
-						telegram.EventReplier(rep.Token, message, os.Getenv("TELEGRAM_TOKEN"))
+						telegram.EventReplier(rep.Token, message, token)
 					}
 				},
 			}
@@ -51,9 +52,10 @@ func GetProvider(name string) Provider {
 
 	case "line":
 		{
+			token := os.Getenv("LINE_TOKEN")
 			provider = Provider{
 				Name:        name,
-				AccessToken: os.Getenv("LINE_TOKEN"),
+				AccessToken: token,
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
 					updates, _ := line.EventAdapter(ctx)
@@ -75,7 +77,7 @@ func GetProvider(name string) Provider {
 					return events, nil
 				},
 				EventReplier: func(rep eventReply) {
-					line.EventReplier(rep.Token, rep.Messages, os.Getenv("LINE_TOKEN"))
+					line.EventReplier(rep.Token, rep.Messages, token)
 				},
 			}
 

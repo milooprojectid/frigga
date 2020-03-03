@@ -100,6 +100,7 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
 
 	InitSession(ID)
+
 	return []string{
 		"Hi im Miloo\n" + commandText,
 	}, nil
