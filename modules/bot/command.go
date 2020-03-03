@@ -9,14 +9,14 @@ var Commands commands
 
 const commandText = "You can control me by sending these commands:	\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
 
-type commandhandler func() ([]string, error)
+type commandhandler func(payload ...interface{}) ([]string, error)
 
 // Command ...
 type Command struct {
 	Name     string
 	Path     string
-	Trigger  func(ID string) ([]string, error)
-	Feedback func(ID string, input string) ([]string, error)
+	Trigger  commandhandler
+	Feedback commandhandler
 }
 
 type commands []Command
@@ -34,7 +34,7 @@ func (cs *commands) getCommand(path string) *Command {
 	return command
 }
 
-func (cs *commands) execute(event Event) eventReply {
+func (cs *commands) execute(event Event, provider string) eventReply {
 	var command *Command
 	var reply eventReply
 
@@ -96,14 +96,17 @@ func RegisterCommands() {
 
 // explicit handler
 
-func startCommandTrigger(ID string) ([]string, error) {
+func startCommandTrigger(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
+
 	InitSession(ID)
 	return []string{
 		"Hi im Miloo\n" + commandText,
 	}, nil
 }
 
-func cancelCommandTrigger(ID string) ([]string, error) {
+func cancelCommandTrigger(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
 	var message string
 
 	if command, _ := GetSession(ID); command == "" {
@@ -118,14 +121,19 @@ func cancelCommandTrigger(ID string) ([]string, error) {
 	}, nil
 }
 
-func sentimentCommandTrigger(ID string) ([]string, error) {
+func sentimentCommandTrigger(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
+
 	UpdateSession(ID, "/sentiment")
 	return []string{
 		"Type the statement you want to analize",
 	}, nil
 }
 
-func sentimentCommandFeedback(ID string, input string) ([]string, error) {
+func sentimentCommandFeedback(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
+	var input string = payload[1].(string)
+
 	var result service.SentimentResult
 	cmd := "/sentiment"
 
@@ -140,14 +148,19 @@ func sentimentCommandFeedback(ID string, input string) ([]string, error) {
 	}, nil
 }
 
-func summarizeCommandTrigger(ID string) ([]string, error) {
+func summarizeCommandTrigger(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
+
 	UpdateSession(ID, "/summarize")
 	return []string{
 		"Type the statement or url you want to summarise",
 	}, nil
 }
 
-func summarizeCommandFeedback(ID string, input string) ([]string, error) {
+func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
+	var input string = payload[1].(string)
+
 	var result service.SummarizationResult
 	cmd := "/summarize"
 

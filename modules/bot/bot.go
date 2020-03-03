@@ -9,7 +9,7 @@ type Bot struct {
 }
 
 func (b *Bot) dispatch(e Event, r chan eventReply) {
-	r <- Commands.execute(e)
+	r <- Commands.execute(e, b.Provider.Name)
 }
 
 // Handler will intercept incoming request and pass it to provider
