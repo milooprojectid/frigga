@@ -21,8 +21,8 @@ func newApp() *iris.Application {
 	teleBot := bot.New(telegram)
 	lineBot := bot.New(line)
 
-	app.Post("/telegram/"+telegram.AccessToken, teleBot.Handler)
-	app.Post("/line", lineBot.Handler)
+	app.Post("/telegram/"+os.Getenv("TELEGRAM_SECRET"), teleBot.Handler)
+	app.Post("/line/"+os.Getenv("LINE_SECRET"), lineBot.Handler)
 
 	return app
 }
