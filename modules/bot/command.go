@@ -181,6 +181,7 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
 	var input string = payload[1].(string)
 
+	var message string
 	var result service.SummarizationResult
 	cmd := "/summarize"
 
