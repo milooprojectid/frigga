@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -100,7 +99,7 @@ func GetProvider(name string) Provider {
 				AccessToken: token,
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
-					fmt.Println("THIS IS SPARTA")
+					log.Println("THIS IS SPARTA")
 					messages, _ := messenger.EventAdapter(ctx)
 					for _, message := range messages {
 						events = append(events, Event{
