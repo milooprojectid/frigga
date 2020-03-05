@@ -23,10 +23,15 @@ func EventAdapter(ctx iris.Context) ([]Event, error) {
 }
 
 // EventReplier ...
-func EventReplier(replyToken string, messages []string, quickReply QuickReply, accessToken string) error {
-	var replyMessages []map[string]string
+func EventReplier(replyToken string, messages []string, quickReply *QuickReply, accessToken string) error {
+	var replyMessages []ReplyMessage
+
 	for _, message := range messages {
-		replyMessages = append(replyMessages, map[string]string{"type": "text", "text": message})
+		replyMessages = append(replyMessages, ReplyMessage{
+			Type:       "text",
+			Text:       message,
+			QuickReply: quickReply,
+		})
 	}
 
 	payload := map[string]interface{}{
