@@ -43,18 +43,34 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 
 	if event.isTrigger() {
 		if command = cs.getCommand(event.Message); command == nil {
-			reply = eventReply{[]string{"I dont know that command ._."}, event.Token}
+			reply = eventReply{
+				Messages: []string{"I dont know that command ._."},
+				Token:    event.Token,
+				Type:     "feedback",
+			}
 		} else {
 			messages, _ := command.Trigger(event.ID, provider)
-			reply = eventReply{messages, event.Token}
+			reply = eventReply{
+				Messages: messages,
+				Token:    event.Token,
+				Type:     "trigger",
+			}
 		}
 
 	} else if cmd, _ := GetSession(event.ID); cmd == "" {
-		reply = eventReply{[]string{"No active command"}, event.Token}
+		reply = eventReply{
+			Messages: []string{"No active command"},
+			Token:    event.Token,
+			Type:     "feedback",
+		}
 	} else {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event.ID, event.Message)
-		reply = eventReply{messages, event.Token}
+		reply = eventReply{
+			Messages: messages,
+			Token:    event.Token,
+			Type:     "feedback",
+		}
 	}
 
 	return reply

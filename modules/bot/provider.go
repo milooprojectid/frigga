@@ -77,7 +77,11 @@ func GetProvider(name string) Provider {
 					return events, nil
 				},
 				EventReplier: func(rep eventReply) {
-					line.EventReplier(rep.Token, rep.Messages, token)
+					var quickReply line.QuickReply
+					if !rep.isTrigger() {
+						quickReply = line.GetCommandQuickReply()
+					}
+					line.EventReplier(rep.Token, rep.Messages, &quickReply, token)
 				},
 			}
 

@@ -17,6 +17,32 @@ type Event struct {
 	} `json:"message"`
 }
 
+// ItemAction ...
+type ItemAction struct {
+	Type  string `json:"type"`
+	Label string `json:"label"`
+	Text  string `json:"text"`
+}
+
+// QuickReplyItem ...
+type QuickReplyItem struct {
+	Type     string     `json:"type"`
+	ImageURL *string    `json:"imageUrl,omitempty"`
+	Action   ItemAction `json:"action"`
+}
+
+// QuickReply ...
+type QuickReply struct {
+	Items []QuickReplyItem `json:"items"`
+}
+
+// ReplyMessage ...
+type ReplyMessage struct {
+	Type       string      `json:"type"`
+	Text       string      `json:"text"`
+	QuickReply *QuickReply `json:"quickReply,omitempty"`
+}
+
 // Request ...
 type Request struct {
 	Destination string  `json:"destination"`
