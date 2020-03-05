@@ -3,6 +3,7 @@ package messenger
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/kataras/iris"
@@ -17,6 +18,8 @@ func EventAdapter(ctx iris.Context) ([]Messaging, error) {
 	if err := ctx.ReadJSON(&event); err != nil {
 		return messagings, err
 	}
+
+	fmt.Println("THIS IS SPARTA")
 
 	for _, en := range event.Entry {
 		for _, messaging := range en.Messaging {
