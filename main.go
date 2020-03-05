@@ -23,7 +23,7 @@ func newApp() *iris.Application {
 	lineBot := bot.New(line)
 	app.Post("/line/"+os.Getenv("LINE_SECRET"), lineBot.Handler)
 
-	messenger := bot.GetProvider("line")
+	messenger := bot.GetProvider("messenger")
 	messengerBot := bot.New(messenger)
 	messengerPath := "/messenger/" + os.Getenv("MESSENGER_SECRET")
 	app.Post(messengerPath, messengerBot.Handler)
