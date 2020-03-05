@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -112,7 +111,7 @@ func GetProvider(name string) Provider {
 				},
 				EventReplier: func(rep eventReply) {
 					for _, message := range rep.Messages {
-						fmt.Println(message)
+						messenger.EventReplier(rep.Token, message, token)
 					}
 				},
 			}

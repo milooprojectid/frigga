@@ -17,12 +17,15 @@ func newApp() *iris.Application {
 
 	telegram := bot.GetProvider("telegram")
 	line := bot.GetProvider("line")
+	messenger := bot.GetProvider("line")
 
 	teleBot := bot.New(telegram)
 	lineBot := bot.New(line)
+	messengerBot := bot.New(messenger)
 
 	app.Post("/telegram/"+os.Getenv("TELEGRAM_SECRET"), teleBot.Handler)
 	app.Post("/line/"+os.Getenv("LINE_SECRET"), lineBot.Handler)
+	app.Post("/messenger/"+os.Getenv("MESSENGER_SECRET"), messengerBot.Handler)
 
 	return app
 }

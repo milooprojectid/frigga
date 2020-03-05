@@ -17,10 +17,33 @@ type Message struct {
 	} `json:"quick_reply"`
 }
 
-// TextMessage ...
-type TextMessage struct {
+// Entry ...
+type Entry struct {
 	Sender    sender    `json:"sender"`
 	Recipient recipient `json:"recipient"`
 	Timestamp int64     `json:"timestamp"`
 	Message   Message   `json:"message"`
+}
+
+// Event ...
+type Event struct {
+	Object string  `json:"object"`
+	Entry  []Entry `json:"entry"`
+}
+
+// SendPayloadRecipient ...
+type SendPayloadRecipient struct {
+	ID string `json:"id"`
+}
+
+// SendPayloadMessage ...
+type SendPayloadMessage struct {
+	Text string `json:"text"`
+}
+
+// SendPayload ...
+type SendPayload struct {
+	MessagingType string               `json:"messaging_type"`
+	Recipient     SendPayloadRecipient `json:"recipient"`
+	Message       SendPayloadMessage   `json:"message"`
 }
