@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"log"
 	"os"
 	"strconv"
 
@@ -81,7 +82,10 @@ func GetProvider(name string) Provider {
 					if !rep.isTrigger() {
 						quickReply = line.GetCommandQuickReply()
 					}
-					line.EventReplier(rep.Token, rep.Messages, quickReply, token)
+					err := line.EventReplier(rep.Token, rep.Messages, quickReply, token)
+					if err != nil {
+						log.Printf(err.Error())
+					}
 				},
 			}
 
