@@ -26,11 +26,10 @@ type ItemAction struct {
 
 // QuickReplyItem ...
 type QuickReplyItem struct {
-	Type   string     `json:"type"`
-	Action ItemAction `json:"action"`
+	Type     string     `json:"type"`
+	ImageURL *string    `json:"imageUrl,omitempty"`
+	Action   ItemAction `json:"action"`
 }
-
-// ImageURL *string    `json:"imageUrl,omitempty"`
 
 // QuickReply ...
 type QuickReply struct {
@@ -39,9 +38,9 @@ type QuickReply struct {
 
 // ReplyMessage ...
 type ReplyMessage struct {
-	Type       string     `json:"type"`
-	Text       string     `json:"text"`
-	QuickReply QuickReply `json:"quickReply,omitempty"`
+	Type       string      `json:"type"`
+	Text       string      `json:"text"`
+	QuickReply *QuickReply `json:"quickReply,omitempty"`
 }
 
 // Request ...
