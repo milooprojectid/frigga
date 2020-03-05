@@ -26,10 +26,11 @@ type ItemAction struct {
 
 // QuickReplyItem ...
 type QuickReplyItem struct {
-	Type     string     `json:"type"`
-	ImageURL *string    `json:"imageUrl,omitempty"`
-	Action   ItemAction `json:"action"`
+	Type   string     `json:"type"`
+	Action ItemAction `json:"action"`
 }
+
+// ImageURL *string    `json:"imageUrl,omitempty"`
 
 // QuickReply ...
 type QuickReply struct {

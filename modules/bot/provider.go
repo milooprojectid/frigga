@@ -82,7 +82,7 @@ func GetProvider(name string) Provider {
 					if !rep.isTrigger() {
 						quickReply = line.GetCommandQuickReply()
 					}
-					err := line.EventReplier(rep.Token, rep.Messages, quickReply, token)
+					err := line.EventReplier(rep.Messages, quickReply, rep.Token, token)
 					if err != nil {
 						log.Printf(err.Error())
 					}
