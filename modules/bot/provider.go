@@ -1,11 +1,13 @@
 package bot
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
 
-	"frigga/modules/line"
+	line "frigga/modules/line"
+	messenger "frigga/modules/messenger"
 	telegram "frigga/modules/telegram"
 
 	"github.com/kataras/iris"
@@ -89,6 +91,31 @@ func GetProvider(name string) Provider {
 				},
 			}
 
+		}
+	case "messenger":
+		{
+			token := os.Getenv("MESSENGER_TOKEN")
+			provider = Provider{
+				Name:        name,
+				AccessToken: token,
+				EventAdapter: func(ctx iris.Context) ([]Event, error) {
+					var events []Event
+					messages, _ := messenger.EventAdapter(ctx)
+					for _, message := range messages {
+						events = append(events, Event{
+							ID:      message.Sender.ID,
+							Message: message.Message.Text,
+							Token:   message.Sender.ID,
+						})
+					}
+					return events, nil
+				},
+				EventReplier: func(rep eventReply) {
+					for _, message := range rep.Messages {
+						fmt.Println(message)
+					}
+				},
+			}
 		}
 	}
 
