@@ -14,7 +14,7 @@ type eventReply struct {
 }
 
 func (e Event) isTrigger() bool {
-	return string(e.Message[0]) == "/"
+	return e.Message != "" && string(e.Message[0]) == "/"
 }
 
 func (e eventReply) isTrigger() bool {
