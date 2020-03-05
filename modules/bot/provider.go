@@ -99,7 +99,6 @@ func GetProvider(name string) Provider {
 				AccessToken: token,
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
-					log.Println("THIS IS SPARTA")
 					messages, _ := messenger.EventAdapter(ctx)
 					for _, message := range messages {
 						events = append(events, Event{
