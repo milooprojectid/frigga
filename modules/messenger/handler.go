@@ -11,12 +11,20 @@ import (
 const apiURL = "https://graph.facebook.com/v6.0"
 
 // EventAdapter ...
-func EventAdapter(ctx iris.Context) ([]Entry, error) {
+func EventAdapter(ctx iris.Context) ([]Messaging, error) {
 	var event Event
+	var messagings []Messaging
 	if err := ctx.ReadJSON(&event); err != nil {
-		return event.Entry, err
+		return messagings, err
 	}
-	return event.Entry, nil
+
+	for _, en := range event.Entry {
+		for _, messaging := range en.Messaging {
+			messagings = append(messagings, messaging)
+		}
+	}
+
+	return messagings, nil
 }
 
 // EventReplier ...

@@ -125,6 +125,10 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 		getter = telegram.GetUserName
 	case "line":
 		getter = line.GetUserName
+	default:
+		getter = func(id string) (string, error) {
+			return id, nil
+		}
 	}
 
 	name, _ := getter(ID)

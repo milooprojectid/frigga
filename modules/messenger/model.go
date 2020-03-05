@@ -17,18 +17,24 @@ type Message struct {
 	} `json:"quick_reply"`
 }
 
-// Entry ...
-type Entry struct {
+// Messaging ...
+type Messaging struct {
 	Sender    sender    `json:"sender"`
 	Recipient recipient `json:"recipient"`
 	Timestamp int64     `json:"timestamp"`
 	Message   Message   `json:"message"`
 }
 
+type entry struct {
+	ID        string      `json:"id"`
+	Time      int64       `json:"time"`
+	Messaging []Messaging `json:"messaging"`
+}
+
 // Event ...
 type Event struct {
 	Object string  `json:"object"`
-	Entry  []Entry `json:"entry"`
+	Entry  []entry `json:"entry"`
 }
 
 // SendPayloadRecipient ...
