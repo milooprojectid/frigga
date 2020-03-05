@@ -28,9 +28,9 @@ func EventReplier(replyToken string, messages []string, quickReply *QuickReply, 
 
 	for _, message := range messages {
 		replyMessages = append(replyMessages, ReplyMessage{
-			Type:       "text",
-			Text:       message,
-			QuickReply: quickReply,
+			Type: "text",
+			Text: message,
+			// QuickReply: quickReply,
 		})
 	}
 
