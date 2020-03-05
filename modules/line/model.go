@@ -38,9 +38,9 @@ type QuickReply struct {
 
 // ReplyMessage ...
 type ReplyMessage struct {
-	Type       string      `json:"type"`
-	Text       string      `json:"text"`
-	QuickReply *QuickReply `json:"quickReply,omitempty"`
+	Type       string     `json:"type"`
+	Text       string     `json:"text"`
+	QuickReply QuickReply `json:"quickReply,omitempty"`
 }
 
 // Request ...
