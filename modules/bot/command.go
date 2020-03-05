@@ -9,7 +9,8 @@ import (
 // Commands containts all command available
 var Commands commands
 
-const commandText = "You can control me by sending these commands:	\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
+const commandGreetMessage = "You can control me by sending these commands:	\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
+const commandFailedMessage = "Hmm, sorry i have problem processing your message :("
 
 type commandhandler func(payload ...interface{}) ([]string, error)
 
@@ -114,7 +115,7 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 	InitSession(ID, name)
 
 	return []string{
-		"Hi im Miloo\n" + commandText,
+		"Hi im Miloo\n" + commandGreetMessage,
 	}, nil
 }
 
@@ -147,11 +148,17 @@ func sentimentCommandFeedback(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
 	var input string = payload[1].(string)
 
+	var message string
 	var result service.SentimentResult
 	cmd := "/sentiment"
 
-	service.All.CallSync("morbius", "sentiment", map[string]string{"text": input}, &result)
-	message := result.Data.Description
+	if err := service.All.CallSync("morbius", "sentiment", map[string]string{"text": input}, &result); err != nil {
+		message = commandFailedMessage
+	} else if result.Data.Description == "" {
+		message = commandFailedMessage
+	} else {
+		message = result.Data.Description
+	}
 
 	LogSession(ID, cmd, input, message)
 	UpdateSession(ID, "")
@@ -177,8 +184,13 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 	var result service.SummarizationResult
 	cmd := "/summarize"
 
-	service.All.CallSync("storm", "summarizeText", map[string]string{"text": input}, &result)
-	message := result.Data.Summary
+	if err := service.All.CallSync("storm", "summarizeText", map[string]string{"text": input}, &result); err != nil {
+		message = commandFailedMessage
+	} else if result.Data.Summary == "" {
+		message = commandFailedMessage
+	} else {
+		message = result.Data.Summary
+	}
 
 	LogSession(ID, cmd, input, message)
 	UpdateSession(ID, "")

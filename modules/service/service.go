@@ -49,13 +49,20 @@ func (s *serviceMap) CallSync(serviceName string, methodName string, payload int
 		return errors.New("No methos registered")
 	}
 
-	requestBody, _ := json.Marshal(payload)
+	requestBody, err := json.Marshal(payload)
+	if err != nil {
+		return errors.New("Failed parsing json body")
+	}
+
 	httpReponse, err := http.Post(service.Endpoint+"/"+path, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return errors.New("Failed calling service method")
 	}
 
-	body, _ := ioutil.ReadAll(httpReponse.Body)
+	body, err := ioutil.ReadAll(httpReponse.Body)
+	if err != nil {
+		return errors.New("Failed parsing json body")
+	}
 	json.Unmarshal(body, &output)
 
 	defer httpReponse.Body.Close()
