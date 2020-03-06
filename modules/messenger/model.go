@@ -59,3 +59,12 @@ type SendPayload struct {
 	Recipient     SendPayloadRecipient `json:"recipient"`
 	Message       SendPayloadMessage   `json:"message"`
 }
+
+type userProfile struct {
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	ProfilePic string `json:"profile_pic"`
+	Locale     string `json:"locale"`
+	Timezone   int    `json:"timezone"`
+	Gender     string `json:"gender"`
+}

@@ -2,7 +2,8 @@ package bot
 
 import (
 	line "frigga/modules/line"
-	"frigga/modules/service"
+	messenger "frigga/modules/messenger"
+	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
 )
 
@@ -128,6 +129,8 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 		getter = telegram.GetUserName
 	case "line":
 		getter = line.GetUserName
+	case "messenger":
+		getter = messenger.GetUserName
 	default:
 		getter = func(id string) (string, error) {
 			return id, nil
