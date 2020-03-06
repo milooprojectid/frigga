@@ -66,13 +66,13 @@ func GetProvider(name string) Provider {
 							events = append(events, Event{
 								ID:      update.Source.UserID,
 								Message: update.Message.Text,
-								Token:   update.ReplyToken,
+								Token:   update.Source.UserID,
 							})
 						} else if update.Type == "follow" {
 							events = append(events, Event{
 								ID:      update.Source.UserID,
 								Message: "/start",
-								Token:   update.ReplyToken,
+								Token:   update.Source.UserID,
 							})
 						}
 					}

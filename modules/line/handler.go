@@ -35,13 +35,13 @@ func EventReplier(messages []string, quickReply QuickReply, replyToken string, a
 	}
 
 	payload := map[string]interface{}{
-		"replyToken": replyToken,
-		"messages":   replyMessages,
+		"to":       replyToken,
+		"messages": replyMessages,
 	}
 	requestBody, _ := json.Marshal(payload)
 
 	client := &http.Client{Timeout: time.Second * 60}
-	req, err := http.NewRequest("POST", apiURL+"/message/reply", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", apiURL+"/message/push", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return err
 	}
