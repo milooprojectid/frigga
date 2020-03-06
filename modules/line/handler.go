@@ -23,7 +23,7 @@ func EventAdapter(ctx iris.Context) ([]Event, error) {
 }
 
 // EventReplier ...
-func EventReplier(messages []string, quickReply QuickReply, replyToken string, accessToken string) error {
+func EventReplier(messages []string, quickReply *QuickReply, replyToken string, accessToken string) error {
 	var replyMessages []ReplyMessage
 
 	for _, message := range messages {
@@ -84,8 +84,8 @@ func GetUserName(userID string) (string, error) {
 }
 
 // GetCommandQuickReply ...
-func GetCommandQuickReply() QuickReply {
-	return QuickReply{
+func GetCommandQuickReply() *QuickReply {
+	quick := &QuickReply{
 		Items: []QuickReplyItem{
 			QuickReplyItem{
 				Type: "action",
@@ -105,4 +105,5 @@ func GetCommandQuickReply() QuickReply {
 			},
 		},
 	}
+	return quick
 }

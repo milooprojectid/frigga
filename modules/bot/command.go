@@ -9,7 +9,7 @@ import (
 // Commands containts all command available
 var Commands commands
 
-const commandGreetMessage = "You can control me by sending these commands:	\n/sentiment - run sentiment analysis on a text\n/summarize - summarise a content of a link or text\n/cancel - terminate currently running command"
+const commandGreetMessage = "You can control me by sending these commands"
 const commandFailedMessage = "Hmm, sorry i have problem processing your message :("
 
 type commandhandler func(payload ...interface{}) ([]string, error)
@@ -44,22 +44,25 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 	if event.isTrigger() {
 		if command = cs.getCommand(event.Message); command == nil {
 			reply = eventReply{
-				Messages: []string{"I dont know that command ._."},
+				Messages: []string{"I dont know that command ._.", commandGreetMessage},
 				Token:    event.Token,
 				Type:     "feedback",
 			}
 		} else {
+			var eventType string = "trigger"
+			if event.Message == "/start" || event.Message == "/cancel" {
+				eventType = "feedback"
+			}
 			messages, _ := command.Trigger(event.ID, provider)
 			reply = eventReply{
 				Messages: messages,
 				Token:    event.Token,
-				Type:     "trigger",
+				Type:     eventType,
 			}
 		}
-
 	} else if cmd, _ := GetSession(event.ID); cmd == "" {
 		reply = eventReply{
-			Messages: []string{"No active command"},
+			Messages: []string{"No active command", commandGreetMessage},
 			Token:    event.Token,
 			Type:     "feedback",
 		}
@@ -152,6 +155,7 @@ func cancelCommandTrigger(payload ...interface{}) ([]string, error) {
 
 	return []string{
 		message,
+		commandGreetMessage,
 	}, nil
 }
 
