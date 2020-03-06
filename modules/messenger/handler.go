@@ -52,12 +52,12 @@ func GetCommandQuickReply() *[]QuickReply {
 	quick := &[]QuickReply{
 		QuickReply{
 			ContentType: "text",
-			Title:       "sentiment",
+			Title:       "/sentiment",
 			Payload:     "/sentiment",
 		},
 		QuickReply{
 			ContentType: "text",
-			Title:       "summarize",
+			Title:       "/summarize",
 			Payload:     "/summarize",
 		},
 	}
