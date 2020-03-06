@@ -30,7 +30,7 @@ func EventReplier(messages []string, quickReply QuickReply, replyToken string, a
 		replyMessages = append(replyMessages, ReplyMessage{
 			Type:       "text",
 			Text:       message,
-			QuickReply: &quickReply,
+			QuickReply: quickReply,
 		})
 	}
 
