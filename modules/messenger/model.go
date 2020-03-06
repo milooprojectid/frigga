@@ -8,13 +8,18 @@ type recipient struct {
 	ID string `json:"id"`
 }
 
+// QuickReply ...
+type QuickReply struct {
+	ContentType string `json:"content_type"`
+	Title       string `json:"title"`
+	ImageURL    string `json:"image_url,omitempty"`
+	Payload     string `json:"payload"`
+}
+
 // Message ...
 type Message struct {
-	Mid        string `json:"mid"`
-	Text       string `json:"text"`
-	QuickReply struct {
-		Payload string `json:"payload"`
-	} `json:"quick_reply"`
+	Mid  string `json:"mid"`
+	Text string `json:"text"`
 }
 
 // Messaging ...
@@ -44,7 +49,8 @@ type SendPayloadRecipient struct {
 
 // SendPayloadMessage ...
 type SendPayloadMessage struct {
-	Text string `json:"text"`
+	Text       string        `json:"text"`
+	QuickReply *[]QuickReply `json:"quick_replies,omitempty"`
 }
 
 // SendPayload ...

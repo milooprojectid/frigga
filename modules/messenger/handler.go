@@ -28,14 +28,15 @@ func EventAdapter(ctx iris.Context) ([]Messaging, error) {
 }
 
 // EventReplier ...
-func EventReplier(PSID string, message string, token string) error {
+func EventReplier(message string, quickReplies *[]QuickReply, PSID string, token string) error {
 	payload := SendPayload{
 		MessagingType: "RESPONSE",
 		Recipient: SendPayloadRecipient{
 			ID: PSID,
 		},
 		Message: SendPayloadMessage{
-			Text: message,
+			Text:       message,
+			QuickReply: quickReplies,
 		},
 	}
 
@@ -44,4 +45,22 @@ func EventReplier(PSID string, message string, token string) error {
 		return err
 	}
 	return nil
+}
+
+// GetCommandQuickReply ...
+func GetCommandQuickReply() *[]QuickReply {
+	quick := &[]QuickReply{
+		QuickReply{
+			ContentType: "text",
+			Title:       "sentiment",
+			Payload:     "/sentiment",
+		},
+		QuickReply{
+			ContentType: "text",
+			Title:       "summarize",
+			Payload:     "/summarize",
+		},
+	}
+
+	return quick
 }

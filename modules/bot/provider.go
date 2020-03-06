@@ -111,8 +111,13 @@ func GetProvider(name string) Provider {
 					return events, nil
 				},
 				EventReplier: func(rep eventReply) {
+					var quickReplies *[]messenger.QuickReply
+					if !rep.isTrigger() {
+						quickReplies = messenger.GetCommandQuickReply()
+					}
+
 					for _, message := range rep.Messages {
-						messenger.EventReplier(rep.Token, message, token)
+						messenger.EventReplier(message, quickReplies, rep.Token, token)
 					}
 				},
 			}
