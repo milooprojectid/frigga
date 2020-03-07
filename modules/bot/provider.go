@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	line "frigga/modules/line"
 	messenger "frigga/modules/messenger"
@@ -18,6 +19,10 @@ type Provider struct {
 	AccessToken  string
 	EventAdapter func(ctx iris.Context) ([]Event, error)
 	EventReplier func(rep eventReply)
+}
+
+func trim(input string) string {
+	return strings.TrimRight(input, "\t \n")
 }
 
 // GetProvider ...
@@ -37,7 +42,7 @@ func GetProvider(name string) Provider {
 					for _, update := range updates {
 						events = append(events, Event{
 							ID:      strconv.Itoa(update.Message.Chat.ID),
-							Message: update.Message.Text,
+							Message: trim(update.Message.Text),
 							Token:   strconv.Itoa(update.Message.Chat.ID),
 						})
 					}
@@ -65,7 +70,7 @@ func GetProvider(name string) Provider {
 						if update.Type == "message" {
 							events = append(events, Event{
 								ID:      update.Source.UserID,
-								Message: update.Message.Text,
+								Message: trim(update.Message.Text),
 								Token:   update.Source.UserID,
 							})
 						} else if update.Type == "follow" {
@@ -104,7 +109,7 @@ func GetProvider(name string) Provider {
 					for _, message := range messages {
 						events = append(events, Event{
 							ID:      message.Sender.ID,
-							Message: message.Message.Text,
+							Message: trim(message.Message.Text),
 							Token:   message.Sender.ID,
 						})
 					}
