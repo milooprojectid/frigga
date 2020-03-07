@@ -38,17 +38,21 @@ func (cs *commands) getCommand(path string) *Command {
 	return command
 }
 
+func getUnknownEventReply(token string) eventReply {
+	return eventReply{
+		Messages: []string{"I dont know that command ._.", commandGreetMessage},
+		Token:    token,
+		Type:     "feedback",
+	}
+}
+
 func (cs *commands) execute(event Event, provider string) eventReply {
 	var command *Command
 	var reply eventReply
 
 	if event.isTrigger() {
 		if command = cs.getCommand(event.Message); command == nil {
-			reply = eventReply{
-				Messages: []string{"I dont know that command ._.", commandGreetMessage},
-				Token:    event.Token,
-				Type:     "feedback",
-			}
+			reply = getUnknownEventReply(event.Token)
 		} else {
 			var eventType string = "trigger"
 			if event.Message == "/start" || event.Message == "/cancel" {
@@ -70,6 +74,24 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 	} else {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event.ID, event.Message)
+		reply = eventReply{
+			Messages: messages,
+			Token:    event.Token,
+			Type:     "feedback",
+		}
+	}
+
+	return reply
+}
+
+func (cs *commands) executeInline(event Event, provider string) eventReply {
+	var reply eventReply
+	commandPath, input, _ := event.getCommandAndInput()
+
+	if command := cs.getCommand(commandPath); command == nil {
+		reply = getUnknownEventReply(event.Token)
+	} else {
+		messages, _ := command.Feedback(event.ID, input)
 		reply = eventReply{
 			Messages: messages,
 			Token:    event.Token,
