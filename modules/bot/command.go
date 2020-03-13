@@ -56,7 +56,7 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 			reply = getUnknownEventReply(event.Token)
 		} else {
 			var eventType string = "trigger"
-			if event.Message == "/start" || event.Message == "/cancel" {
+			if command.Feedback == nil {
 				eventType = "feedback"
 			}
 			messages, _ := command.Trigger(event.ID, provider)
@@ -132,10 +132,9 @@ func RegisterCommands() {
 	}
 
 	covid19SummaryCommand := Command{
-		Name:     "Covid19",
-		Path:     "/corona",
-		Trigger:  covid19Command,
-		Feedback: covid19Command,
+		Name:    "Covid19",
+		Path:    "/corona",
+		Trigger: covid19Command,
 	}
 
 	// initialize to singletons
