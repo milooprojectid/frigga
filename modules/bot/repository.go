@@ -10,6 +10,7 @@ import (
 
 type session struct {
 	ActiveCommand string `firestore:"activeCommand"`
+	Provider      string `firestore:"provider"`
 	UserID        string `firestore:"userId"`
 	Name          string `firestore:"name"`
 }
@@ -22,9 +23,9 @@ type history struct {
 }
 
 // InitSession ...
-func InitSession(sessionID string, name string) error {
+func InitSession(provider string, sessionID string, name string) error {
 	ctx := context.Background()
-	session := session{"", sessionID, name}
+	session := session{"", provider, sessionID, name}
 	_, err := d.FS.Doc("bot_sessions/"+sessionID).Set(ctx, session)
 	if err != nil {
 		return err

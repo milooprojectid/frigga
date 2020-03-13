@@ -160,7 +160,7 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 	}
 
 	name, _ := getter(ID)
-	InitSession(ID, name)
+	InitSession(provider, ID, name)
 
 	return []string{
 		"Hi im Miloo\n" + commandGreetMessage,
