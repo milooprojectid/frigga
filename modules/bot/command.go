@@ -5,6 +5,7 @@ import (
 	messenger "frigga/modules/messenger"
 	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
+	"strconv"
 )
 
 // Commands containts all command available
@@ -130,12 +131,20 @@ func RegisterCommands() {
 		Feedback: summarizeCommandFeedback,
 	}
 
+	covid19SummaryCommand := Command{
+		Name:     "Covid19",
+		Path:     "/corona",
+		Trigger:  covid19Command,
+		Feedback: covid19Command,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
 		cancelCommand,
 		sentimentCommand,
 		summarizeCommand,
+		covid19SummaryCommand,
 	}
 }
 
@@ -248,4 +257,16 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 	return []string{
 		message,
 	}, nil
+}
+
+func covid19Command(payload ...interface{}) ([]string, error) {
+	var covid19Data map[string]int
+	messages := []string{}
+
+	covid19Data, _ = GetCovid19Data()
+	for key, val := range covid19Data {
+		messages = append(messages, key+" "+strconv.Itoa(val))
+	}
+
+	return messages, nil
 }
