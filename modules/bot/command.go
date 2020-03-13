@@ -260,13 +260,17 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 }
 
 func covid19Command(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
 	var covid19Data map[string]int
 	messages := []string{}
+	cmd := "/corona"
 
 	covid19Data, _ = GetCovid19Data()
 	for key, val := range covid19Data {
 		messages = append(messages, key+" "+strconv.Itoa(val))
 	}
+
+	LogSession(ID, cmd, "", "")
 
 	return messages, nil
 }
