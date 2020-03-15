@@ -26,8 +26,14 @@ func EventAdapter(ctx iris.Context) ([]Update, error) {
 }
 
 // EventReplier ...
-func EventReplier(chatID string, message string, token string) error {
-	payload := map[string]string{"chat_id": chatID, "text": message}
+func EventReplier(message string, replyMarkup *ReplyMarkup, chatID string, token string) error {
+	payload := MessageReply{
+		Text:                  message,
+		ChatID:                chatID,
+		DisableWebPagePreview: true,
+		ReplyMarkup:           replyMarkup,
+	}
+
 	requestBody, _ := json.Marshal(payload)
 	if _, err := http.Post(apiURL+token+"/sendMessage", "application/json", bytes.NewBuffer(requestBody)); err != nil {
 		return err
@@ -62,4 +68,23 @@ func GetUserName(chatID string) (string, error) {
 	}
 
 	return name, nil
+}
+
+// GetCommandQuickReply ...
+func GetCommandQuickReply() *ReplyMarkup {
+	quick := &ReplyMarkup{
+		InlineKeyboard: []InlineKeyboard{
+			InlineKeyboard{
+				Text: "/summarize",
+			},
+			InlineKeyboard{
+				Text: "/sentiment",
+			},
+			InlineKeyboard{
+				Text: "/corona",
+			},
+		},
+	}
+
+	return quick
 }

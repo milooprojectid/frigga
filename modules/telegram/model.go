@@ -36,7 +36,21 @@ type Update struct {
 	Message  message `json:"message"`
 }
 
-type messageReply struct {
-	ChatID  int
-	Message string
+// InlineKeyboard ...
+type InlineKeyboard struct {
+	Text string  `json:"text"`
+	URL  *string `json:"url,omitempty"`
+}
+
+// ReplyMarkup ...
+type ReplyMarkup struct {
+	InlineKeyboard []InlineKeyboard `json:"inline_keyboard"`
+}
+
+// MessageReply ...
+type MessageReply struct {
+	ChatID                string       `json:"chat_id"`
+	Text                  string       `json:"text"`
+	DisableWebPagePreview bool         `json:"disable_web_page_preview"`
+	ReplyMarkup           *ReplyMarkup `json:"reply_markup,omitempty"`
 }
