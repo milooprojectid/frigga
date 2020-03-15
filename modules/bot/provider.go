@@ -50,9 +50,9 @@ func GetProvider(name string) Provider {
 				},
 				EventReplier: func(rep eventReply) {
 					var replyMarkup *telegram.ReplyMarkup
-					if !rep.isTrigger() {
-						replyMarkup = telegram.GetCommandQuickReply()
-					}
+					// if !rep.isTrigger() {
+					// 	replyMarkup = telegram.GetCommandQuickReply()
+					// }
 					for _, message := range rep.Messages {
 						telegram.EventReplier(message, replyMarkup, rep.Token, token)
 					}
