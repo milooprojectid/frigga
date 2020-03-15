@@ -137,6 +137,12 @@ func RegisterCommands() {
 		Trigger: covid19Command,
 	}
 
+	covid19SubscriptionCommand := Command{
+		Name:    "Covid19Subs",
+		Path:    "/covsubs",
+		Trigger: covid19SubscribeCommand,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
@@ -144,6 +150,7 @@ func RegisterCommands() {
 		sentimentCommand,
 		summarizeCommand,
 		covid19SummaryCommand,
+		covid19SubscriptionCommand,
 	}
 }
 
@@ -269,6 +276,21 @@ func covid19Command(payload ...interface{}) ([]string, error) {
 		messages = append(messages, key+" "+strconv.Itoa(val))
 	}
 
+	LogSession(ID, cmd, "", "")
+
+	return messages, nil
+}
+
+func covid19SubscribeCommand(payload ...interface{}) ([]string, error) {
+	var ID string = payload[0].(string)
+	var provider string = payload[1].(string)
+
+	messages := []string{
+		"Thank you for subscribing, we will notify you about covid-19 dialy",
+	}
+	cmd := "/covsubs"
+
+	SetCovid19SubsData(ID, provider)
 	LogSession(ID, cmd, "", "")
 
 	return messages, nil

@@ -92,3 +92,16 @@ func GetCovid19Data() (map[string]int, error) {
 
 	return covid19Data, nil
 }
+
+// SetCovid19SubsData ...
+func SetCovid19SubsData(uid string, provider string) error {
+	ctx := context.Background()
+	payload := map[string]interface{}{
+		"is_subscribe": true,
+		"provider":     provider,
+		"token":        uid,
+	}
+	_, err := d.FS.Doc("bot_data/covid19/subscriptions/"+uid).Set(ctx, payload)
+
+	return err
+}
