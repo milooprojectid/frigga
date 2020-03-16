@@ -103,3 +103,19 @@ func GetCommandQuickReply() *[]QuickReply {
 
 	return quick
 }
+
+// VerifySignature ...
+func VerifySignature(ctx iris.Context) {
+	secret := os.Getenv("MESSENGER_SECRET")
+	mode := ctx.URLParam("hub.mode")
+	token := ctx.URLParam("hub.verify_token")
+	challenge := ctx.URLParam("hub.challenge")
+
+	if mode == "subscribe" && token == secret {
+		ctx.StatusCode(200)
+		ctx.Text(challenge)
+	} else {
+		ctx.StatusCode(403)
+		ctx.Text("cant validate signature")
+	}
+}
