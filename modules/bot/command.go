@@ -287,7 +287,7 @@ func covid19SubscribeCommand(payload ...interface{}) ([]string, error) {
 	var provider string = payload[1].(string)
 
 	messages := []string{
-		"Thank you for subscribing, we will notify you about covid-19 dialy",
+		"Thank you for subscribing, we will notify you about covid-19 daily",
 	}
 	cmd := "/subscov19"
 
