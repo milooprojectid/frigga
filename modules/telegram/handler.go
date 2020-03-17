@@ -25,9 +25,19 @@ func EventAdapter(ctx iris.Context) ([]Update, error) {
 	}, nil
 }
 
+// SendMessages ...
+func SendMessages(payload interface{}) error {
+	token := os.Getenv("TELEGRAM_TOKEN")
+	requestBody, _ := json.Marshal(payload)
+	if _, err := http.Post(apiURL+token+"/sendMessage", "application/json", bytes.NewBuffer(requestBody)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // EventReplier ...
 func EventReplier(message string, replyMarkup *ReplyMarkup, chatID string) error {
-	token := os.Getenv("TELEGRAM_TOKEN")
 	payload := MessageReply{
 		Text:                  message,
 		ChatID:                chatID,
@@ -35,11 +45,7 @@ func EventReplier(message string, replyMarkup *ReplyMarkup, chatID string) error
 		ReplyMarkup:           replyMarkup,
 	}
 
-	requestBody, _ := json.Marshal(payload)
-	if _, err := http.Post(apiURL+token+"/sendMessage", "application/json", bytes.NewBuffer(requestBody)); err != nil {
-		return err
-	}
-	return nil
+	return SendMessages(payload)
 }
 
 // GetUserName ...

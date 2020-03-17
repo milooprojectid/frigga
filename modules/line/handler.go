@@ -22,10 +22,31 @@ func EventAdapter(ctx iris.Context) ([]Event, error) {
 	return request.Events, nil
 }
 
+// SendMessages ...
+func SendMessages(payload interface{}) error {
+	token := os.Getenv("LINE_TOKEN")
+	requestBody, _ := json.Marshal(payload)
+
+	client := &http.Client{Timeout: time.Second * 60}
+	req, err := http.NewRequest("POST", apiURL+"/message/push", bytes.NewBuffer(requestBody))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	_, err = client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // EventReplier ...
 func EventReplier(messages []string, quickReply *QuickReply, replyToken string) error {
 	var replyMessages []ReplyMessage
-	accessToken := os.Getenv("LINE_TOKEN")
 
 	for _, message := range messages {
 		replyMessages = append(replyMessages, ReplyMessage{
@@ -39,23 +60,8 @@ func EventReplier(messages []string, quickReply *QuickReply, replyToken string) 
 		"to":       replyToken,
 		"messages": replyMessages,
 	}
-	requestBody, _ := json.Marshal(payload)
 
-	client := &http.Client{Timeout: time.Second * 60}
-	req, err := http.NewRequest("POST", apiURL+"/message/push", bytes.NewBuffer(requestBody))
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+accessToken)
-
-	_, err = client.Do(req)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return SendMessages(payload)
 }
 
 // GetUserName ...

@@ -30,9 +30,19 @@ func EventAdapter(ctx iris.Context) ([]Messaging, error) {
 	return messagings, nil
 }
 
+// SendMessages ...
+func SendMessages(payload interface{}) error {
+	token := os.Getenv("MESSENGER_TOKEN")
+	requestBody, _ := json.Marshal(payload)
+	if _, err := http.Post(apiURL+"/v6.0/me/messages?access_token="+token, "application/json", bytes.NewBuffer(requestBody)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // EventReplier ...
 func EventReplier(message string, quickReplies *[]QuickReply, PSID string) error {
-	token := os.Getenv("MESSENGER_TOKEN")
 	payload := SendPayload{
 		MessagingType: "RESPONSE",
 		Recipient: SendPayloadRecipient{
@@ -44,11 +54,7 @@ func EventReplier(message string, quickReplies *[]QuickReply, PSID string) error
 		},
 	}
 
-	requestBody, _ := json.Marshal(payload)
-	if _, err := http.Post(apiURL+"/v6.0/me/messages?access_token="+token, "application/json", bytes.NewBuffer(requestBody)); err != nil {
-		return err
-	}
-	return nil
+	return SendMessages(payload)
 }
 
 // GetUserName ...
