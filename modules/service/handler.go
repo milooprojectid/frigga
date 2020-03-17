@@ -1,9 +1,11 @@
 package service
 
 import (
-	line "frigga/modules/line"
+	"frigga/modules/line"
 	repo "frigga/modules/repository"
 	telegram "frigga/modules/telegram"
+	"strconv"
+	"strings"
 
 	"github.com/kataras/iris"
 )
@@ -12,12 +14,35 @@ func replyWorker(subscription repo.Covid19Subcription, data map[string]int) {
 	switch subscription.Provider {
 	case "telegram":
 		{
-			line.EventReplier()
+			bold := []string{}
+			for key, val := range data {
+				bold = append(bold, "<b>"+key+" "+strconv.Itoa(val)+"</b>")
+			}
+			messageType := "HTML"
+			payload := telegram.MessageReply{
+				Text:      strings.Join(bold, "\n"),
+				ChatID:    subscription.Token,
+				ParseMode: &messageType,
+			}
+			telegram.SendMessages(payload)
 		}
 
 	case "line":
 		{
-			telegram.EventReplier()
+			bold := []string{}
+			for key, val := range data {
+				bold = append(bold, key+" "+strconv.Itoa(val))
+			}
+			payload := map[string]interface{}{
+				"to": subscription.Token,
+				"messages": []line.ReplyMessage{
+					line.ReplyMessage{
+						Text: strings.Join(bold, "\n"),
+						Type: "text",
+					},
+				},
+			}
+			line.SendMessages(payload)
 		}
 	}
 }

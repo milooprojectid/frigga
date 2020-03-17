@@ -53,7 +53,7 @@ func GetProvider(name string) Provider {
 					// 	replyMarkup = telegram.GetCommandQuickReply()
 					// }
 					for _, message := range rep.Messages {
-						telegram.EventReplier(message, replyMarkup, rep.Token, token)
+						telegram.EventReplier(message, replyMarkup, rep.Token)
 					}
 				},
 			}
