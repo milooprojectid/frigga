@@ -3,6 +3,7 @@ package bot
 import (
 	line "frigga/modules/line"
 	messenger "frigga/modules/messenger"
+	repo "frigga/modules/repository"
 	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
 	"strconv"
@@ -66,7 +67,7 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 				Type:     eventType,
 			}
 		}
-	} else if cmd, _ := GetSession(event.ID); cmd == "" {
+	} else if cmd, _ := repo.GetSession(event.ID); cmd == "" {
 		reply = eventReply{
 			Messages: []string{"No active command", commandGreetMessage},
 			Token:    event.Token,
@@ -175,7 +176,7 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 	}
 
 	name, _ := getter(ID)
-	InitSession(provider, ID, name)
+	repo.InitSession(provider, ID, name)
 
 	return []string{
 		"Hi im Miloo\n" + commandGreetMessage,
@@ -186,11 +187,11 @@ func cancelCommandTrigger(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
 	var message string
 
-	if command, _ := GetSession(ID); command == "" {
+	if command, _ := repo.GetSession(ID); command == "" {
 		message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
 	} else {
 		message = "Command cancelled"
-		UpdateSession(ID, "")
+		repo.UpdateSession(ID, "")
 	}
 
 	return []string{
@@ -202,7 +203,7 @@ func cancelCommandTrigger(payload ...interface{}) ([]string, error) {
 func sentimentCommandTrigger(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
 
-	UpdateSession(ID, "/sentiment")
+	repo.UpdateSession(ID, "/sentiment")
 	return []string{
 		"Type the statement you want to analize",
 	}, nil
@@ -224,8 +225,8 @@ func sentimentCommandFeedback(payload ...interface{}) ([]string, error) {
 		message = result.Data.Description
 	}
 
-	LogSession(ID, cmd, input, message)
-	UpdateSession(ID, "")
+	repo.LogSession(ID, cmd, input, message)
+	repo.UpdateSession(ID, "")
 
 	return []string{
 		message,
@@ -235,7 +236,7 @@ func sentimentCommandFeedback(payload ...interface{}) ([]string, error) {
 func summarizeCommandTrigger(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
 
-	UpdateSession(ID, "/summarize")
+	repo.UpdateSession(ID, "/summarize")
 	return []string{
 		"Type the statement or url you want to summarise",
 	}, nil
@@ -257,8 +258,8 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 		message = result.Data.Summary
 	}
 
-	LogSession(ID, cmd, input, message)
-	UpdateSession(ID, "")
+	repo.LogSession(ID, cmd, input, message)
+	repo.UpdateSession(ID, "")
 
 	return []string{
 		message,
@@ -271,12 +272,12 @@ func covid19Command(payload ...interface{}) ([]string, error) {
 	messages := []string{}
 	cmd := "/corona"
 
-	covid19Data, _ = GetCovid19Data()
+	covid19Data, _ = repo.GetCovid19Data()
 	for key, val := range covid19Data {
 		messages = append(messages, key+" "+strconv.Itoa(val))
 	}
 
-	LogSession(ID, cmd, "", "")
+	repo.LogSession(ID, cmd, "", "")
 
 	return messages, nil
 }
@@ -290,8 +291,8 @@ func covid19SubscribeCommand(payload ...interface{}) ([]string, error) {
 	}
 	cmd := "/covsubs"
 
-	SetCovid19SubsData(ID, provider)
-	LogSession(ID, cmd, "", "")
+	repo.SetCovid19SubsData(ID, provider)
+	repo.LogSession(ID, cmd, "", "")
 
 	return messages, nil
 }

@@ -1,6 +1,9 @@
 package service
 
-// SendNotificationToSubscribtion ...
-func SendNotificationToSubscription() {
+import (
+	"github.com/kataras/iris"
+)
 
+// SendNotificationToSubscriptionHandler ...
+func SendNotificationToSubscriptionHandler(ctx iris.Context) {
 }

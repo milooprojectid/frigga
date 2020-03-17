@@ -36,6 +36,10 @@ func newApp() *iris.Application {
 	app.Get(messengerPath, m.VerifySignature)
 	// ---
 
+	// OTHER HANDLER
+	app.Post("subscription/notify", service.SendNotificationToSubscriptionHandler)
+	// ---
+
 	return app
 }
 
