@@ -122,7 +122,7 @@ func GetCommandQuickReply() *QuickReply {
 				Type: "action",
 				Action: ItemAction{
 					Type:  "message",
-					Label: "covid-19 notification",
+					Label: "covid-19 notif",
 					Text:  "/subscov19",
 				},
 			},
