@@ -118,6 +118,14 @@ func GetCommandQuickReply() *QuickReply {
 					Text:  "/corona",
 				},
 			},
+			QuickReplyItem{
+				Type: "action",
+				Action: ItemAction{
+					Type:  "message",
+					Label: "covid-19 notification",
+					Text:  "/subscov19",
+				},
+			},
 		},
 	}
 	return quick

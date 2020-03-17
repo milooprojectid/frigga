@@ -106,6 +106,11 @@ func GetCommandQuickReply() *[]QuickReply {
 			Title:       "/corona",
 			Payload:     "/corona",
 		},
+		QuickReply{
+			ContentType: "text",
+			Title:       "/subscov19",
+			Payload:     "/subscov19",
+		},
 	}
 
 	return quick

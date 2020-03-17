@@ -2,6 +2,7 @@ package service
 
 import (
 	"frigga/modules/line"
+	messenger "frigga/modules/messenger"
 	repo "frigga/modules/repository"
 	telegram "frigga/modules/telegram"
 	"strconv"
@@ -44,7 +45,26 @@ func replyWorker(subscription repo.Covid19Subcription, data map[string]int) {
 			}
 			line.SendMessages(payload)
 		}
+
+	case "messenger":
+		{
+			bold := []string{}
+			for key, val := range data {
+				bold = append(bold, key+" "+strconv.Itoa(val))
+			}
+			payload := messenger.SendPayload{
+				MessagingType: "RESPONSE",
+				Recipient: messenger.SendPayloadRecipient{
+					ID: subscription.Token,
+				},
+				Message: messenger.SendPayloadMessage{
+					Text: strings.Join(bold, "\n"),
+				},
+			}
+			messenger.SendMessages(payload)
+		}
 	}
+
 }
 
 // SendNotificationToSubscriptionHandler ...

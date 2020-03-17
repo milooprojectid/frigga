@@ -140,7 +140,7 @@ func RegisterCommands() {
 
 	covid19SubscriptionCommand := Command{
 		Name:    "Covid19Subs",
-		Path:    "/covsubs",
+		Path:    "/subscov19",
 		Trigger: covid19SubscribeCommand,
 	}
 
@@ -289,7 +289,7 @@ func covid19SubscribeCommand(payload ...interface{}) ([]string, error) {
 	messages := []string{
 		"Thank you for subscribing, we will notify you about covid-19 dialy",
 	}
-	cmd := "/covsubs"
+	cmd := "/subscov19"
 
 	repo.SetCovid19SubsData(ID, provider)
 	repo.LogSession(ID, cmd, "", "")
