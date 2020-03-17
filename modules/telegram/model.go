@@ -52,5 +52,6 @@ type MessageReply struct {
 	ChatID                string       `json:"chat_id"`
 	Text                  string       `json:"text"`
 	DisableWebPagePreview bool         `json:"disable_web_page_preview"`
+	ParseMode             *string      `json:"parse_mode,omitempty"`
 	ReplyMarkup           *ReplyMarkup `json:"reply_markup,omitempty"`
 }

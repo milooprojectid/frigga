@@ -23,8 +23,9 @@ func EventAdapter(ctx iris.Context) ([]Event, error) {
 }
 
 // EventReplier ...
-func EventReplier(messages []string, quickReply *QuickReply, replyToken string, accessToken string) error {
+func EventReplier(messages []string, quickReply *QuickReply, replyToken string) error {
 	var replyMessages []ReplyMessage
+	accessToken := os.Getenv("LINE_TOKEN")
 
 	for _, message := range messages {
 		replyMessages = append(replyMessages, ReplyMessage{

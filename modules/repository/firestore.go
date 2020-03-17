@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
 )
 
 type session struct {
@@ -104,4 +105,26 @@ func SetCovid19SubsData(uid string, provider string) error {
 	_, err := d.FS.Doc("bot_data/covid19/subscriptions/"+uid).Set(ctx, payload)
 
 	return err
+}
+
+// GetCovid19Subscription ...
+func GetCovid19Subscription() ([]Covid19Subcription, error) {
+	covid19Subscriptions := []Covid19Subcription{}
+	var sub Covid19Subcription
+
+	ctx := context.Background()
+	iter := d.FS.Collection("bot_data/covid19/subscriptions").Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return covid19Subscriptions, err
+		}
+		doc.DataTo(&sub)
+		covid19Subscriptions = append(covid19Subscriptions, sub)
+	}
+
+	return covid19Subscriptions, nil
 }

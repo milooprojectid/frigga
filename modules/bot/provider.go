@@ -32,10 +32,9 @@ func GetProvider(name string) Provider {
 	switch name {
 	case "telegram":
 		{
-			token := os.Getenv("TELEGRAM_TOKEN")
 			provider = Provider{
 				Name:        name,
-				AccessToken: token,
+				AccessToken: os.Getenv("TELEGRAM_TOKEN"),
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
 					updates, _ := telegram.EventAdapter(ctx)
@@ -63,10 +62,9 @@ func GetProvider(name string) Provider {
 
 	case "line":
 		{
-			token := os.Getenv("LINE_TOKEN")
 			provider = Provider{
 				Name:        name,
-				AccessToken: token,
+				AccessToken: os.Getenv("LINE_TOKEN"),
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
 					updates, _ := line.EventAdapter(ctx)
@@ -93,7 +91,7 @@ func GetProvider(name string) Provider {
 						quickReply = line.GetCommandQuickReply()
 					}
 
-					err := line.EventReplier(rep.Messages, quickReply, rep.Token, token)
+					err := line.EventReplier(rep.Messages, quickReply, rep.Token)
 					if err != nil {
 						log.Printf(err.Error())
 					}
@@ -103,10 +101,9 @@ func GetProvider(name string) Provider {
 		}
 	case "messenger":
 		{
-			token := os.Getenv("MESSENGER_TOKEN")
 			provider = Provider{
 				Name:        name,
-				AccessToken: token,
+				AccessToken: os.Getenv("MESSENGER_TOKEN"),
 				EventAdapter: func(ctx iris.Context) ([]Event, error) {
 					var events []Event
 					messages, _ := messenger.EventAdapter(ctx)
@@ -126,7 +123,7 @@ func GetProvider(name string) Provider {
 					}
 
 					for _, message := range rep.Messages {
-						messenger.EventReplier(message, quickReplies, rep.Token, token)
+						messenger.EventReplier(message, quickReplies, rep.Token)
 					}
 				},
 			}

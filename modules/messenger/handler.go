@@ -31,7 +31,8 @@ func EventAdapter(ctx iris.Context) ([]Messaging, error) {
 }
 
 // EventReplier ...
-func EventReplier(message string, quickReplies *[]QuickReply, PSID string, token string) error {
+func EventReplier(message string, quickReplies *[]QuickReply, PSID string) error {
+	token := os.Getenv("MESSENGER_TOKEN")
 	payload := SendPayload{
 		MessagingType: "RESPONSE",
 		Recipient: SendPayloadRecipient{

@@ -26,7 +26,8 @@ func EventAdapter(ctx iris.Context) ([]Update, error) {
 }
 
 // EventReplier ...
-func EventReplier(message string, replyMarkup *ReplyMarkup, chatID string, token string) error {
+func EventReplier(message string, replyMarkup *ReplyMarkup, chatID string) error {
+	token := os.Getenv("TELEGRAM_TOKEN")
 	payload := MessageReply{
 		Text:                  message,
 		ChatID:                chatID,
