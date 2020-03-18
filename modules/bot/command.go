@@ -112,6 +112,12 @@ func RegisterCommands() {
 		Trigger: startCommandTrigger,
 	}
 
+	helpCommand := Command{
+		Name:    "Help",
+		Path:    "/help",
+		Trigger: helpCommandTrigger,
+	}
+
 	cancelCommand := Command{
 		Name:    "Cancel",
 		Path:    "/cancel",
@@ -147,6 +153,7 @@ func RegisterCommands() {
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
+		helpCommand,
 		cancelCommand,
 		sentimentCommand,
 		summarizeCommand,
@@ -181,6 +188,10 @@ func startCommandTrigger(payload ...interface{}) ([]string, error) {
 	return []string{
 		"Hi im Miloo\n" + commandGreetMessage,
 	}, nil
+}
+
+func helpCommandTrigger(payload ...interface{}) ([]string, error) {
+	return []string{commandGreetMessage}, nil
 }
 
 func cancelCommandTrigger(payload ...interface{}) ([]string, error) {
