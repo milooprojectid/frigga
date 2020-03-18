@@ -279,13 +279,11 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 
 func covid19Command(payload ...interface{}) ([]string, error) {
 	var ID string = payload[0].(string)
-	var covid19Data map[string]int
-	messages := []string{}
 	cmd := "/corona"
 
-	covid19Data, _ = repo.GetCovid19Data()
-	for key, val := range covid19Data {
-		messages = append(messages, key+" "+strconv.Itoa(val))
+	data, _ := repo.GetCovid19Data()
+	messages := []string{
+		"Covid-19 Report\n\n" + "Confirmed " + strconv.Itoa(data.Confirmed) + "\n" + "Suspected " + strconv.Itoa(data.Suspected) + "\n" + "Recovered " + strconv.Itoa(data.Recovered) + "\n" + "Deceased " + strconv.Itoa(data.Deceased),
 	}
 
 	repo.LogSession(ID, cmd, "", "")
