@@ -12,16 +12,18 @@ import (
 )
 
 func replyWorker(subscription repo.Covid19Subcription, data map[string]int) {
+	bold := []string{}
+	for key, val := range data {
+		bold = append(bold, key+" "+strconv.Itoa(val))
+	}
+	message := "Covid-19 Report\n\n" + strings.Join(bold, "\n")
+
 	switch subscription.Provider {
 	case "telegram":
 		{
-			bold := []string{}
-			for key, val := range data {
-				bold = append(bold, "<b>"+key+" "+strconv.Itoa(val)+"</b>")
-			}
 			messageType := "HTML"
 			payload := telegram.MessageReply{
-				Text:      strings.Join(bold, "\n"),
+				Text:      message,
 				ChatID:    subscription.Token,
 				ParseMode: &messageType,
 			}
@@ -30,15 +32,11 @@ func replyWorker(subscription repo.Covid19Subcription, data map[string]int) {
 
 	case "line":
 		{
-			bold := []string{}
-			for key, val := range data {
-				bold = append(bold, key+" "+strconv.Itoa(val))
-			}
 			payload := map[string]interface{}{
 				"to": subscription.Token,
 				"messages": []line.ReplyMessage{
 					line.ReplyMessage{
-						Text: strings.Join(bold, "\n"),
+						Text: message,
 						Type: "text",
 					},
 				},
@@ -48,17 +46,13 @@ func replyWorker(subscription repo.Covid19Subcription, data map[string]int) {
 
 	case "messenger":
 		{
-			bold := []string{}
-			for key, val := range data {
-				bold = append(bold, key+" "+strconv.Itoa(val))
-			}
 			payload := messenger.SendPayload{
 				MessagingType: "RESPONSE",
 				Recipient: messenger.SendPayloadRecipient{
 					ID: subscription.Token,
 				},
 				Message: messenger.SendPayloadMessage{
-					Text: strings.Join(bold, "\n"),
+					Text: message,
 				},
 			}
 			messenger.SendMessages(payload)
