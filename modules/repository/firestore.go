@@ -78,8 +78,8 @@ func LogSession(sessionID, command, input, output string) error {
 }
 
 // GetCovid19Data ...
-func GetCovid19Data() (map[string]int, error) {
-	var covid19Data map[string]int
+func GetCovid19Data() (Covid19Data, error) {
+	var covid19Data Covid19Data
 
 	ctx := context.Background()
 	docsnap, err := d.FS.Doc("bot_data/covid19").Get(ctx)

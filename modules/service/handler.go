@@ -6,17 +6,12 @@ import (
 	repo "frigga/modules/repository"
 	telegram "frigga/modules/telegram"
 	"strconv"
-	"strings"
 
 	"github.com/kataras/iris"
 )
 
-func replyWorker(subscription repo.Covid19Subcription, data map[string]int) {
-	bold := []string{}
-	for key, val := range data {
-		bold = append(bold, key+" "+strconv.Itoa(val))
-	}
-	message := "Covid-19 Report\n\n" + strings.Join(bold, "\n")
+func replyWorker(subscription repo.Covid19Subcription, data repo.Covid19Data) {
+	message := "Covid-19 Report\n\n" + "Confirmed " + strconv.Itoa(data.Confirmed) + "\n" + "Suspected " + strconv.Itoa(data.Suspected) + "\n" + "Recovered " + strconv.Itoa(data.Recovered) + "\n" + "Deceased " + strconv.Itoa(data.Deceased) + "\n"
 
 	switch subscription.Provider {
 	case "telegram":
