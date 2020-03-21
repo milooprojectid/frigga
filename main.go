@@ -52,6 +52,7 @@ func main() {
 	// initialize singletons
 	driver.InitializeFirestore()
 	service.InitializeServices()
+	service.InitializeGrpcServices()
 	bot.RegisterCommands()
 
 	app := newApp()

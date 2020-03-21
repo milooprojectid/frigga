@@ -16,6 +16,7 @@ require (
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4 // indirect
 	github.com/gavv/monotime v0.0.0-20190418164738-30dba4353424 // indirect
 	github.com/go-check/check v0.0.0-20190902080502-41f04d3bba15 // indirect
+	github.com/golang/protobuf v1.3.3
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
@@ -60,6 +61,7 @@ require (
 	golang.org/x/tools v0.0.0-20200226154504-48cfad2f5e00 // indirect
 	google.golang.org/api v0.19.0
 	google.golang.org/genproto v0.0.0-20200225123651-fc8f55426688 // indirect
+	google.golang.org/grpc v1.27.1
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

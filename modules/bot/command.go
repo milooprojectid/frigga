@@ -1,10 +1,12 @@
 package bot
 
 import (
+	"context"
 	line "frigga/modules/line"
 	messenger "frigga/modules/messenger"
 	repo "frigga/modules/repository"
 	service "frigga/modules/service"
+	storm "frigga/modules/service/storm"
 	telegram "frigga/modules/telegram"
 	"frigga/modules/template"
 	"time"
@@ -259,15 +261,19 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 	var input string = payload[1].(string)
 
 	var message string
-	var result service.SummarizationResult
+	var result string
 	cmd := "/summarize"
 
-	if err := service.All.CallSync("storm", "summarizeText", map[string]string{"text": input}, &result); err != nil {
-		message = commandFailedMessage
-	} else if result.Data.Summary == "" {
+	request := &storm.SummarizeRequest{
+		Text: input,
+	}
+	response, _ := (*storm.Client).Summarize(context.Background(), request)
+	result = response.GetSummary()
+
+	if result == "" {
 		message = commandFailedMessage
 	} else {
-		message = result.Data.Summary
+		message = result
 	}
 
 	repo.LogSession(ID, cmd, input, message)

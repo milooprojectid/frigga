@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"frigga/modules/service/storm"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -77,7 +78,7 @@ func InitializeServices() error {
 	All = serviceMap{
 		"morbius": Service{
 			Name:     "Morbius",
-			Endpoint: os.Getenv("SERVICE_MORBIUS_URL"),
+			Endpoint: os.Getenv("SERVICE_REST_MORBIUS_URL"),
 			Protocol: "TCP",
 			Methods: map[string]string{
 				"sentiment": "",
@@ -85,7 +86,7 @@ func InitializeServices() error {
 		},
 		"storm": Service{
 			Name:     "Storm",
-			Endpoint: os.Getenv("SERVICE_STORM_URL"),
+			Endpoint: os.Getenv("SERVICE_REST_STORM_URL"),
 			Protocol: "TCP",
 			Methods: map[string]string{
 				"summarizeText": "",
@@ -93,5 +94,11 @@ func InitializeServices() error {
 			},
 		},
 	}
+	return nil
+}
+
+// InitializeGrpcServices ...
+func InitializeGrpcServices() error {
+	storm.Init(os.Getenv("SERVICE_GRPC_STORM_URL"))
 	return nil
 }
