@@ -7,6 +7,7 @@ import (
 	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
 	"frigga/modules/template"
+	"time"
 )
 
 // Commands containts all command available
@@ -283,7 +284,7 @@ func covid19Command(payload ...interface{}) ([]string, error) {
 
 	data, _ := repo.GetCovid19Data()
 	templatePayload := map[string]interface{}{
-		"Date":      "21 Maret 2020",
+		"Date":      time.Now().Format("02 Mar 2006"),
 		"Confirmed": data.Confirmed,
 		"Recovered": data.Recovered,
 		"Deceased":  data.Deceased,

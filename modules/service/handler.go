@@ -5,22 +5,29 @@ import (
 	messenger "frigga/modules/messenger"
 	repo "frigga/modules/repository"
 	telegram "frigga/modules/telegram"
-	"strconv"
+	"frigga/modules/template"
+	"time"
 
 	"github.com/kataras/iris"
 )
 
 func replyWorker(subscription repo.Covid19Subcription, data repo.Covid19Data) {
-	message := "Covid-19 Report\n\n" + "Confirmed " + strconv.Itoa(data.Confirmed) + "\n" + "Suspected " + strconv.Itoa(data.Suspected) + "\n" + "Recovered " + strconv.Itoa(data.Recovered) + "\n" + "Deceased " + strconv.Itoa(data.Deceased)
+	templatePayload := map[string]interface{}{
+		"Date":      time.Now().Format("02 Mar 2006"),
+		"Confirmed": data.Confirmed,
+		"Recovered": data.Recovered,
+		"Deceased":  data.Deceased,
+	}
+	message := template.ProcessFile("storage/covid19.tmpl", templatePayload)
 
 	switch subscription.Provider {
 	case "telegram":
 		{
-			messageType := "HTML"
+			// messageType := "HTML"
 			payload := telegram.MessageReply{
-				Text:      message,
-				ChatID:    subscription.Token,
-				ParseMode: &messageType,
+				Text:   message,
+				ChatID: subscription.Token,
+				// ParseMode: &messageType,
 			}
 			telegram.SendMessages(payload)
 		}
