@@ -11,15 +11,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-func replyWorker(subscription repo.Covid19Subcription, data repo.Covid19Data) {
-	templatePayload := map[string]interface{}{
-		"Date":      time.Now().Format("02 Mar 2006"),
-		"Confirmed": data.Confirmed,
-		"Recovered": data.Recovered,
-		"Deceased":  data.Deceased,
-	}
-	message := template.ProcessFile("storage/covid19.tmpl", templatePayload)
-
+func replyWorker(subscription repo.Covid19Subcription, message string) {
 	switch subscription.Provider {
 	case "telegram":
 		{
@@ -68,8 +60,16 @@ func SendNotificationToSubscriptionHandler(ctx iris.Context) {
 	covid19data, _ := repo.GetCovid19Data()
 	covid19subcriptions, _ := repo.GetCovid19Subscription()
 
+	templatePayload := map[string]interface{}{
+		"Date":      time.Now().Format("02 Mar 2006"),
+		"Confirmed": covid19data.Confirmed,
+		"Recovered": covid19data.Recovered,
+		"Deceased":  covid19data.Deceased,
+	}
+	message := template.ProcessFile("storage/covid19.tmpl", templatePayload)
+
 	for _, sub := range covid19subcriptions {
-		go replyWorker(sub, covid19data)
+		go replyWorker(sub, message)
 	}
 
 	ctx.JSON(map[string]interface{}{
