@@ -6,7 +6,7 @@ import (
 	repo "frigga/modules/repository"
 	service "frigga/modules/service"
 	telegram "frigga/modules/telegram"
-	"strconv"
+	"frigga/modules/template"
 )
 
 // Commands containts all command available
@@ -282,8 +282,16 @@ func covid19Command(payload ...interface{}) ([]string, error) {
 	cmd := "/corona"
 
 	data, _ := repo.GetCovid19Data()
+	templatePayload := map[string]interface{}{
+		"Date":      "21 Maret 2020",
+		"Confirmed": data.Confirmed,
+		"Recovered": data.Recovered,
+		"Deceased":  data.Deceased,
+	}
+
+	message := template.ProcessFile("modules/template/storage/covid19.tmpl", templatePayload)
 	messages := []string{
-		"Covid-19 Report\n\n" + "Confirmed " + strconv.Itoa(data.Confirmed) + "\n" + "Suspected " + strconv.Itoa(data.Suspected) + "\n" + "Recovered " + strconv.Itoa(data.Recovered) + "\n" + "Deceased " + strconv.Itoa(data.Deceased),
+		message,
 	}
 
 	repo.LogSession(ID, cmd, "", "")
