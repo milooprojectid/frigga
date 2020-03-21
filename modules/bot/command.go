@@ -289,7 +289,7 @@ func covid19Command(payload ...interface{}) ([]string, error) {
 		"Deceased":  data.Deceased,
 	}
 
-	message := template.ProcessFile("modules/template/storage/covid19.tmpl", templatePayload)
+	message := template.ProcessFile("storage/covid19.tmpl", templatePayload)
 	messages := []string{
 		message,
 	}

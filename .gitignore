@@ -22,6 +22,6 @@ app
 coverage.*
 .vscode
 
-storage/*
 .rspec_status
 .env
+*.json
