@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"frigga/modules/service/morbius"
 	"frigga/modules/service/storm"
 	"io/ioutil"
 	"net/http"
@@ -100,5 +101,6 @@ func InitializeServices() error {
 // InitializeGrpcServices ...
 func InitializeGrpcServices() error {
 	storm.Init(os.Getenv("SERVICE_GRPC_STORM_URL"))
+	morbius.Init(os.Getenv("SERVICE_GRPC_MORBIUS_URL"))
 	return nil
 }

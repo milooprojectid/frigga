@@ -5,7 +5,7 @@ import (
 	line "frigga/modules/line"
 	messenger "frigga/modules/messenger"
 	repo "frigga/modules/repository"
-	service "frigga/modules/service"
+	"frigga/modules/service/morbius"
 	storm "frigga/modules/service/storm"
 	telegram "frigga/modules/telegram"
 	"frigga/modules/template"
@@ -228,15 +228,16 @@ func sentimentCommandFeedback(payload ...interface{}) ([]string, error) {
 	var input string = payload[1].(string)
 
 	var message string
-	var result service.SentimentResult
 	cmd := "/sentiment"
 
-	if err := service.All.CallSync("morbius", "sentiment", map[string]string{"text": input}, &result); err != nil {
-		message = commandFailedMessage
-	} else if result.Data.Description == "" {
+	request := &morbius.SentimentRequest{
+		Text: input,
+	}
+
+	if response, err := (*morbius.Client).Sentiment(context.Background(), request); err != nil || response.GetDescription() == "" {
 		message = commandFailedMessage
 	} else {
-		message = result.Data.Description
+		message = response.GetDescription()
 	}
 
 	repo.LogSession(ID, cmd, input, message)
@@ -261,19 +262,16 @@ func summarizeCommandFeedback(payload ...interface{}) ([]string, error) {
 	var input string = payload[1].(string)
 
 	var message string
-	var result string
 	cmd := "/summarize"
 
 	request := &storm.SummarizeRequest{
 		Text: input,
 	}
-	response, _ := (*storm.Client).Summarize(context.Background(), request)
-	result = response.GetSummary()
 
-	if result == "" {
+	if response, err := (*storm.Client).Summarize(context.Background(), request); err != nil || response.GetSummary() == "" {
 		message = commandFailedMessage
 	} else {
-		message = result
+		message = response.GetSummary()
 	}
 
 	repo.LogSession(ID, cmd, input, message)
