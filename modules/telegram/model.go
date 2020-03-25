@@ -22,12 +22,65 @@ type chat struct {
 	LastName  string `json:"last_name,omitempty"`
 }
 
+type audio struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	Duration     int    `json:"duration"`
+	FileSize     int    `json:"file_size,omitempty"`
+}
+
+type document struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	FileName     string `json:"file_name,omitempty"`
+	FileSize     int    `json:"file_size,omitempty"`
+	MimeType     string `json:"mime_type,omitempty"`
+}
+
+type video struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	Duration     int    `json:"duration"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+	FileSize     int    `json:"file_size,omitempty"`
+	FileName     string `json:"file_name,omitempty"`
+	MimeType     string `json:"mime_type,omitempty"`
+}
+
+type voice struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	Duration     int    `json:"duration"`
+	FileSize     int    `json:"file_size,omitempty"`
+	FileName     string `json:"file_name,omitempty"`
+}
+
+type photoSize struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+	FileSize     int    `json:"file_size,omitempty"`
+}
+
+type location struct {
+	Longitude float64 `json:"longitude"`
+	Latitude  float64 `json:"latitude"`
+}
+
 type message struct {
-	MessageID int    `json:"message_id"`
-	From      user   `json:"from"`
-	Date      int    `json:"date"`
-	Chat      chat   `json:"chat"`
-	Text      string `json:"text,omitempty"`
+	MessageID int       `json:"message_id"`
+	From      user      `json:"from"`
+	Date      int       `json:"date"`
+	Chat      chat      `json:"chat"`
+	Text      string    `json:"text,omitempty"`
+	Audio     audio     `json:"audio,omitempty"`
+	Document  document  `json:"document,omitempty"`
+	Video     video     `json:"video,omitempty"`
+	Voice     voice     `json:"voice,omitempty"`
+	Photo     photoSize `json:"photo,omitempty"`
+	Location  location  `json:"location,omitempty"`
 }
 
 // Update ...
