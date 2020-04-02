@@ -288,7 +288,7 @@ func covid19Command(payload ...interface{}) ([]string, error) {
 
 	data, _ := repo.GetCovid19Data()
 	templatePayload := map[string]interface{}{
-		"Date":      time.Now().Format("02 Mar 2006"),
+		"Date":      time.Now().Format("02-Jan-2006"),
 		"Confirmed": data.Confirmed,
 		"Recovered": data.Recovered,
 		"Deceased":  data.Deceased,
