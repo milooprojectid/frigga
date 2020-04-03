@@ -61,10 +61,11 @@ func SendNotificationToSubscriptionHandler(ctx iris.Context) {
 	covid19subcriptions, _ := repo.GetCovid19Subscription()
 
 	templatePayload := map[string]interface{}{
-		"Date":      time.Now().Format("02 Mar 2006"),
+		"Date":      time.Now().Format("02 Jan 2006"),
 		"Confirmed": covid19data.Confirmed,
 		"Recovered": covid19data.Recovered,
 		"Deceased":  covid19data.Deceased,
+		"Treated":   covid19data.Confirmed - covid19data.Recovered - covid19data.Deceased,
 	}
 	message := template.ProcessFile("storage/covid19.tmpl", templatePayload)
 
