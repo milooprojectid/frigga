@@ -5,6 +5,12 @@ import (
 	"strings"
 )
 
+// Message ...
+type Message struct {
+	Type string
+	Text string
+}
+
 // Event ...
 type Event struct {
 	ID      string
