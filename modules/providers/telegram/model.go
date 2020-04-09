@@ -1,9 +1,7 @@
 package telegram
 
-// Bot ...
-type Bot struct {
-	Token string
-}
+// Name ...
+const Name = "telegram"
 
 type user struct {
 	ID        int    `json:"id"`

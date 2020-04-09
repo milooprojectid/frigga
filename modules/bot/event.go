@@ -2,34 +2,30 @@ package bot
 
 import (
 	"errors"
+	c "frigga/modules/common"
 	"strings"
 )
 
-// Message ...
-type Message struct {
-	Type string
-	Text string
-}
-
 // Event ...
 type Event struct {
-	ID      string
-	Message string
-	Token   string
+	ID       string
+	Message  c.Message
+	Provider string
+	Token    string
 }
 
 type eventReply struct {
-	Messages []string
+	Messages []c.Message
 	Token    string
 	Type     string
 }
 
 func (e Event) isTrigger() bool {
-	return e.Message != "" && string(e.Message[0]) == "/"
+	return e.Message.Text != "" && string(e.Message.Text[0]) == "/"
 }
 
 func (e Event) isInline() bool {
-	var message string = e.Message
+	var message string = e.Message.Text
 
 	if message == "" {
 		return false
@@ -48,7 +44,7 @@ func (e Event) isInline() bool {
 }
 
 func (e Event) getCommandAndInput() (string, string, error) {
-	var message string = e.Message
+	var message string = e.Message.Text
 	var command string
 	var input string
 

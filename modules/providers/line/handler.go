@@ -3,6 +3,7 @@ package line
 import (
 	"bytes"
 	"encoding/json"
+	c "frigga/modules/common"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -45,13 +46,13 @@ func SendMessages(payload interface{}) error {
 }
 
 // EventReplier ...
-func EventReplier(messages []string, quickReply *QuickReply, replyToken string) error {
+func EventReplier(messages []c.Message, quickReply *QuickReply, replyToken string) error {
 	var replyMessages []ReplyMessage
 
 	for _, message := range messages {
 		replyMessages = append(replyMessages, ReplyMessage{
 			Type:       "text",
-			Text:       message,
+			Text:       message.Text,
 			QuickReply: quickReply,
 		})
 	}

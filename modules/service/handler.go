@@ -1,10 +1,10 @@
 package service
 
 import (
-	"frigga/modules/line"
-	messenger "frigga/modules/messenger"
+	"frigga/modules/providers/line"
+	messenger "frigga/modules/providers/messenger"
 	repo "frigga/modules/repository"
-	telegram "frigga/modules/telegram"
+	telegram "frigga/modules/providers/telegram"
 	"frigga/modules/template"
 	"time"
 

@@ -3,6 +3,7 @@ package messenger
 import (
 	"bytes"
 	"encoding/json"
+	c "frigga/modules/common"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -42,14 +43,14 @@ func SendMessages(payload interface{}) error {
 }
 
 // EventReplier ...
-func EventReplier(message string, quickReplies *[]QuickReply, PSID string) error {
+func EventReplier(message c.Message, quickReplies *[]QuickReply, PSID string) error {
 	payload := SendPayload{
 		MessagingType: "RESPONSE",
 		Recipient: SendPayloadRecipient{
 			ID: PSID,
 		},
 		Message: SendPayloadMessage{
-			Text:       message,
+			Text:       message.Text,
 			QuickReply: quickReplies,
 		},
 	}

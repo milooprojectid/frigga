@@ -1,5 +1,8 @@
 package messenger
 
+// Name ...
+const Name = "messenger"
+
 type sender struct {
 	ID string `json:"id"`
 }

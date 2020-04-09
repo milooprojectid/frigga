@@ -3,6 +3,7 @@ package telegram
 import (
 	"bytes"
 	"encoding/json"
+	c "frigga/modules/common"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -37,9 +38,9 @@ func SendMessages(payload interface{}) error {
 }
 
 // EventReplier ...
-func EventReplier(message string, replyMarkup *ReplyMarkup, chatID string) error {
+func EventReplier(message c.Message, replyMarkup *ReplyMarkup, chatID string) error {
 	payload := MessageReply{
-		Text:                  message,
+		Text:                  message.Text,
 		ChatID:                chatID,
 		DisableWebPagePreview: true,
 		ReplyMarkup:           replyMarkup,

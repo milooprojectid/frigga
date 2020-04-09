@@ -1,5 +1,8 @@
 package line
 
+// Name ...
+const Name = "line"
+
 // Event ...
 type Event struct {
 	ReplyToken string `json:"replyToken"`

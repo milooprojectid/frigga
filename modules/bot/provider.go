@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	line "frigga/modules/line"
-	messenger "frigga/modules/messenger"
-	telegram "frigga/modules/telegram"
+	c "frigga/modules/common"
+	line "frigga/modules/providers/line"
+	messenger "frigga/modules/providers/messenger"
+	telegram "frigga/modules/providers/telegram"
 
 	"github.com/kataras/iris"
 )
@@ -30,7 +31,7 @@ func GetProvider(name string) Provider {
 	var provider Provider
 
 	switch name {
-	case "telegram":
+	case telegram.Name:
 		{
 			provider = Provider{
 				Name:        name,
@@ -40,9 +41,10 @@ func GetProvider(name string) Provider {
 					updates, _ := telegram.EventAdapter(ctx)
 					for _, update := range updates {
 						events = append(events, Event{
-							ID:      strconv.Itoa(update.Message.Chat.ID),
-							Message: trim(update.Message.Text),
-							Token:   strconv.Itoa(update.Message.Chat.ID),
+							ID:       strconv.Itoa(update.Message.Chat.ID),
+							Message:  c.GenerateTextMessage(trim(update.Message.Text)),
+							Token:    strconv.Itoa(update.Message.Chat.ID),
+							Provider: telegram.Name,
 						})
 					}
 					return events, nil
@@ -60,7 +62,7 @@ func GetProvider(name string) Provider {
 
 		}
 
-	case "line":
+	case line.Name:
 		{
 			provider = Provider{
 				Name:        name,
@@ -71,15 +73,18 @@ func GetProvider(name string) Provider {
 					for _, update := range updates {
 						if update.Type == "message" {
 							events = append(events, Event{
-								ID:      update.Source.UserID,
-								Message: trim(update.Message.Text),
-								Token:   update.Source.UserID,
+								ID: update.Source.UserID,
+								Message: c.Message{
+									Text: trim(update.Message.Text),
+								},
+								Token: update.Source.UserID,
 							})
 						} else if update.Type == "follow" {
 							events = append(events, Event{
-								ID:      update.Source.UserID,
-								Message: "/start",
-								Token:   update.Source.UserID,
+								ID:       update.Source.UserID,
+								Message:  c.GenerateTextMessage("/start"),
+								Token:    update.Source.UserID,
+								Provider: line.Name,
 							})
 						}
 					}
@@ -99,7 +104,7 @@ func GetProvider(name string) Provider {
 			}
 
 		}
-	case "messenger":
+	case messenger.Name:
 		{
 			provider = Provider{
 				Name:        name,
@@ -109,9 +114,10 @@ func GetProvider(name string) Provider {
 					messages, _ := messenger.EventAdapter(ctx)
 					for _, message := range messages {
 						events = append(events, Event{
-							ID:      message.Sender.ID,
-							Message: trim(message.Message.Text),
-							Token:   message.Sender.ID,
+							ID:       message.Sender.ID,
+							Message:  c.GenerateTextMessage(trim(message.Message.Text)),
+							Token:    message.Sender.ID,
+							Provider: messenger.Name,
 						})
 					}
 					return events, nil

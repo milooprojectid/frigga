@@ -9,7 +9,7 @@ import (
 
 	bot "frigga/modules/bot"
 	driver "frigga/modules/driver"
-	m "frigga/modules/messenger"
+	m "frigga/modules/providers/messenger"
 	service "frigga/modules/service"
 )
 
