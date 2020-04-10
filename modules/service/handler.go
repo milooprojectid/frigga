@@ -26,12 +26,14 @@ func replyWorker(subscription repo.Covid19Subcription, message string) {
 
 	case "line":
 		{
+			quickReply := line.GetCommandQuickReply()
 			payload := map[string]interface{}{
 				"to": subscription.Token,
-				"messages": []line.ReplyMessage{
-					line.ReplyMessage{
-						Text: message,
-						Type: "text",
+				"messages": []line.TextReplyMessage{
+					line.TextReplyMessage{
+						Text:       message,
+						Type:       "text",
+						QuickReply: quickReply,
 					},
 				},
 			}
