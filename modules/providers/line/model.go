@@ -46,12 +46,27 @@ type TextReplyMessage struct {
 	QuickReply *QuickReply `json:"quickReply,omitempty"`
 }
 
-// MediaReplyMessage ...
-type MediaReplyMessage struct {
+// AudioReplyMessage ...
+type AudioReplyMessage struct {
 	Type               string      `json:"type"`
 	OriginalContentURL string      `json:"originalContentUrl"`
-	PreviewImageURL    *string     `json:"previewImageUrl,omitempty"`
-	Duration           *int        `json:"duration,omitempty"`
+	Duration           int         `json:"duration,omitempty"`
+	QuickReply         *QuickReply `json:"quickReply,omitempty"`
+}
+
+// VideoReplyMessage ...
+type VideoReplyMessage struct {
+	Type               string      `json:"type"`
+	OriginalContentURL string      `json:"originalContentUrl"`
+	PreviewImageURL    string      `json:"previewImageUrl,omitempty"`
+	QuickReply         *QuickReply `json:"quickReply,omitempty"`
+}
+
+// ImageReplyMessage ...
+type ImageReplyMessage struct {
+	Type               string      `json:"type"`
+	OriginalContentURL string      `json:"originalContentUrl"`
+	PreviewImageURL    string      `json:"previewImageUrl,omitempty"`
 	QuickReply         *QuickReply `json:"quickReply,omitempty"`
 }
 

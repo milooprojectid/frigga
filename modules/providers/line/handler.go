@@ -56,20 +56,23 @@ func EventReplier(messages []c.Message, quickReply *QuickReply, replyToken strin
 
 		switch message.Type {
 		case c.AudioMessageType:
-			payload = MediaReplyMessage{
+			payload = AudioReplyMessage{
 				Type:               "audio",
 				OriginalContentURL: message.Text,
 				QuickReply:         quickReply,
+				Duration:           60000,
 			}
 		case c.VideoMessageType:
-			payload = MediaReplyMessage{
+			payload = VideoReplyMessage{
 				Type:               "video",
 				OriginalContentURL: message.Text,
+				PreviewImageURL:    "https://miloo.id/assets/img/thumbnail.png",
 				QuickReply:         quickReply,
 			}
 		case c.ImageMessageType:
-			payload = MediaReplyMessage{
+			payload = ImageReplyMessage{
 				Type:               "image",
+				PreviewImageURL:    "https://miloo.id/assets/img/thumbnail.png",
 				OriginalContentURL: message.Text,
 				QuickReply:         quickReply,
 			}
@@ -80,6 +83,8 @@ func EventReplier(messages []c.Message, quickReply *QuickReply, replyToken strin
 				lon, _ := strconv.ParseFloat(splitted[1], 64)
 				payload = LocationReplyMessage{
 					Type:       "location",
+					Title:      "Location",
+					Address:    message.Text,
 					Latitude:   lat,
 					Longitude:  lon,
 					QuickReply: quickReply,
