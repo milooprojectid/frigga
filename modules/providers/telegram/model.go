@@ -98,11 +98,44 @@ type ReplyMarkup struct {
 	InlineKeyboard []InlineKeyboard `json:"inline_keyboard"`
 }
 
-// MessageReply ...
-type MessageReply struct {
+// TextMessageReply ...
+type TextMessageReply struct {
 	ChatID                string       `json:"chat_id"`
 	Text                  string       `json:"text"`
 	DisableWebPagePreview bool         `json:"disable_web_page_preview"`
 	ParseMode             *string      `json:"parse_mode,omitempty"`
 	ReplyMarkup           *ReplyMarkup `json:"reply_markup,omitempty"`
+}
+
+// ImageMessageReply ...
+type ImageMessageReply struct {
+	ChatID                string       `json:"chat_id"`
+	Photo                 string       `json:"photo"`
+	DisableWebPagePreview bool         `json:"disable_web_page_preview"`
+	ParseMode             *string      `json:"parse_mode,omitempty"`
+	ReplyMarkup           *ReplyMarkup `json:"reply_markup,omitempty"`
+}
+
+// AudioMessageReply ...
+type AudioMessageReply struct {
+	ChatID      string       `json:"chat_id"`
+	Audio       string       `json:"audio"`
+	ParseMode   *string      `json:"parse_mode,omitempty"`
+	ReplyMarkup *ReplyMarkup `json:"reply_markup,omitempty"`
+}
+
+// VideoMessageReply ...
+type VideoMessageReply struct {
+	ChatID      string       `json:"chat_id"`
+	Video       string       `json:"video"`
+	ParseMode   *string      `json:"parse_mode,omitempty"`
+	ReplyMarkup *ReplyMarkup `json:"reply_markup,omitempty"`
+}
+
+// LocationMessageReply ...
+type LocationMessageReply struct {
+	ChatID      string       `json:"chat_id"`
+	Latitude    float64      `json:"latitude"`
+	Longitude   float64      `json:"longitude"`
+	ReplyMarkup *ReplyMarkup `json:"reply_markup,omitempty"`
 }

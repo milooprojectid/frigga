@@ -362,12 +362,12 @@ func typeTesterCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Mess
 
 	case c.AudioMessageType:
 		{
-			response = c.GenerateTextMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/audio-example.mp3?alt=media&token=5684a144-6d09-42db-88d4-29c1445225ef")
+			response = c.GenerateAudioMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/audio-example.mp3?alt=media&token=5684a144-6d09-42db-88d4-29c1445225ef")
 		}
 
 	case c.VideoMessageType:
 		{
-			response = c.GenerateTextMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/video-example.mp4?alt=media&token=13def274-3b0d-4771-9f15-6ab18064087b")
+			response = c.GenerateVideoMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/video-example.mp4?alt=media&token=13def274-3b0d-4771-9f15-6ab18064087b")
 		}
 
 	case c.ImageMessageType:
@@ -377,7 +377,7 @@ func typeTesterCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Mess
 
 	case c.LocationMessageType:
 		{
-			response = c.GenerateLocationMessage("-6.202436, 106.825993")
+			response = c.GenerateLocationMessage("-6.207644,106.809604")
 		}
 
 	}

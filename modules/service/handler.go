@@ -3,8 +3,8 @@ package service
 import (
 	"frigga/modules/providers/line"
 	messenger "frigga/modules/providers/messenger"
-	repo "frigga/modules/repository"
 	telegram "frigga/modules/providers/telegram"
+	repo "frigga/modules/repository"
 	"frigga/modules/template"
 	"time"
 
@@ -16,12 +16,12 @@ func replyWorker(subscription repo.Covid19Subcription, message string) {
 	case "telegram":
 		{
 			// messageType := "HTML"
-			payload := telegram.MessageReply{
+			payload := telegram.TextMessageReply{
 				Text:   message,
 				ChatID: subscription.Token,
 				// ParseMode: &messageType,
 			}
-			telegram.SendMessages(payload)
+			telegram.SendMessages(payload, "text")
 		}
 
 	case "line":

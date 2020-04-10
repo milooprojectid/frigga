@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/kataras/iris"
 )
@@ -27,10 +29,29 @@ func EventAdapter(ctx iris.Context) ([]Update, error) {
 }
 
 // SendMessages ...
-func SendMessages(payload interface{}) error {
+func SendMessages(payload interface{}, messageType string) error {
 	token := os.Getenv("TELEGRAM_TOKEN")
 	requestBody, _ := json.Marshal(payload)
-	if _, err := http.Post(apiURL+token+"/sendMessage", "application/json", bytes.NewBuffer(requestBody)); err != nil {
+	var url string
+
+	switch messageType {
+	case c.TextMessageType:
+		url = "sendMessage"
+
+	case c.AudioMessageType:
+		url = "sendAudio"
+
+	case c.VideoMessageType:
+		url = "sendVideo"
+
+	case c.ImageMessageType:
+		url = "sendPhoto"
+
+	case c.LocationMessageType:
+		url = "sendLocation"
+	}
+
+	if _, err := http.Post(apiURL+token+"/"+url, "application/json", bytes.NewBuffer(requestBody)); err != nil {
 		return err
 	}
 
@@ -39,14 +60,55 @@ func SendMessages(payload interface{}) error {
 
 // EventReplier ...
 func EventReplier(message c.Message, replyMarkup *ReplyMarkup, chatID string) error {
-	payload := MessageReply{
-		Text:                  message.Text,
-		ChatID:                chatID,
-		DisableWebPagePreview: true,
-		ReplyMarkup:           replyMarkup,
+	var payload interface{}
+
+	switch message.Type {
+	case c.TextMessageType:
+		payload = TextMessageReply{
+			Text:                  message.Text,
+			ChatID:                chatID,
+			DisableWebPagePreview: true,
+			ReplyMarkup:           replyMarkup,
+		}
+
+	case c.AudioMessageType:
+		payload = AudioMessageReply{
+			Audio:       message.Text,
+			ChatID:      chatID,
+			ReplyMarkup: replyMarkup,
+		}
+
+	case c.VideoMessageType:
+		payload = VideoMessageReply{
+			Video:       message.Text,
+			ChatID:      chatID,
+			ReplyMarkup: replyMarkup,
+		}
+
+	case c.ImageMessageType:
+		payload = ImageMessageReply{
+			Photo:                 message.Text,
+			ChatID:                chatID,
+			DisableWebPagePreview: true,
+			ReplyMarkup:           replyMarkup,
+		}
+
+	case c.LocationMessageType:
+		{
+			splitted := strings.Split(message.Text, ",")
+			lat, _ := strconv.ParseFloat(splitted[0], 64)
+			lon, _ := strconv.ParseFloat(splitted[1], 64)
+			payload = LocationMessageReply{
+				ChatID:      chatID,
+				Latitude:    lat,
+				Longitude:   lon,
+				ReplyMarkup: replyMarkup,
+			}
+		}
+
 	}
 
-	return SendMessages(payload)
+	return SendMessages(payload, message.Type)
 }
 
 // GetUserName ...
