@@ -16,16 +16,32 @@ import (
 // Commands containts all command available
 var Commands commands
 
-const commandGreetMessage = "You can control me by sending these commands"
-const commandFailedMessage = "Hmm, sorry i have problem processing your message :("
+// Common Messaged
+const (
+	commandGreetMessage     = "You can control me by sending these commands below"
+	commandFailedMessage    = "Hmm, sorry i have problem processing your message :("
+	commandUnknownMessage   = "I dont know that command ._."
+	commandInactiveMessage  = "No active command"
+	commandCancelledMessage = "Command cancelled"
+)
 
 // Command ...
 type Command struct {
 	Name     string
 	Path     string
-	Trigger  func(event BotEvent) ([]string, error)
-	Feedback func(event BotEvent, output ...interface{}) ([]string, error)
+	Trigger  func(event BotEvent) ([]c.Message, error)
+	Feedback func(event BotEvent, output ...interface{}) ([]c.Message, error)
 }
+
+func (c *Command) getEventType() string {
+	var eventType string = "trigger"
+	if c.Feedback == nil {
+		eventType = "feedback"
+	}
+	return eventType
+}
+
+// Commands
 
 type commands []Command
 
@@ -45,7 +61,7 @@ func (cs *commands) getCommand(path string) *Command {
 func getUnknownEventReply(token string) BotReply {
 	return BotReply{
 		Messages: c.GenerateTextMessages([]string{
-			"I dont know that command ._.",
+			commandUnknownMessage,
 			commandGreetMessage,
 		}),
 		Token: token,
@@ -61,13 +77,10 @@ func (cs *commands) execute(event BotEvent, provider string) BotReply {
 		if command = cs.getCommand(event.Message.Text); command == nil {
 			reply = getUnknownEventReply(event.Token)
 		} else {
-			var eventType string = "trigger"
-			if command.Feedback == nil {
-				eventType = "feedback"
-			}
+			eventType := command.getEventType()
 			messages, _ := command.Trigger(event)
 			reply = BotReply{
-				Messages: c.GenerateTextMessages(messages),
+				Messages: messages,
 				Token:    event.Token,
 				Type:     eventType,
 			}
@@ -75,7 +88,7 @@ func (cs *commands) execute(event BotEvent, provider string) BotReply {
 	} else if cmd, _ := repo.GetSession(event.ID); cmd == "" {
 		reply = BotReply{
 			Messages: c.GenerateTextMessages([]string{
-				"No active command",
+				commandInactiveMessage,
 				commandGreetMessage,
 			}),
 			Token: event.Token,
@@ -85,7 +98,7 @@ func (cs *commands) execute(event BotEvent, provider string) BotReply {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event, event.Message.Text)
 		reply = BotReply{
-			Messages: c.GenerateTextMessages(messages),
+			Messages: messages,
 			Token:    event.Token,
 			Type:     "feedback",
 		}
@@ -103,7 +116,7 @@ func (cs *commands) executeInline(event BotEvent, provider string) BotReply {
 	} else {
 		messages, _ := command.Feedback(event, input)
 		reply = BotReply{
-			Messages: c.GenerateTextMessages(messages),
+			Messages: messages,
 			Token:    event.Token,
 			Type:     "feedback",
 		}
@@ -172,7 +185,7 @@ func RegisterCommands() {
 
 // Explicit handler
 
-func startCommandTrigger(event BotEvent) ([]string, error) {
+func startCommandTrigger(event BotEvent) ([]c.Message, error) {
 	var getter func(id string) (string, error)
 
 	ID := event.ID
@@ -194,40 +207,42 @@ func startCommandTrigger(event BotEvent) ([]string, error) {
 	name, _ := getter(ID)
 	repo.InitSession(provider, ID, name)
 
-	return []string{
+	return c.GenerateTextMessages([]string{
 		"Hi im Miloo\n" + commandGreetMessage,
-	}, nil
+	}), nil
 }
 
-func helpCommandTrigger(event BotEvent) ([]string, error) {
-	return []string{commandGreetMessage}, nil
+func helpCommandTrigger(event BotEvent) ([]c.Message, error) {
+	return c.GenerateTextMessages([]string{
+		commandGreetMessage,
+	}), nil
 }
 
-func cancelCommandTrigger(event BotEvent) ([]string, error) {
+func cancelCommandTrigger(event BotEvent) ([]c.Message, error) {
 	ID := event.ID
 	var message string
 
 	if command, _ := repo.GetSession(ID); command == "" {
-		message = "No active command to cancel. I wasn't doing anything anyway. Zzzzz..."
+		message = commandInactiveMessage + " to cancel. I wasn't doing anything anyway. Zzzzz..."
 	} else {
-		message = "Command cancelled"
+		message = commandCancelledMessage
 		repo.UpdateSession(ID, "")
 	}
 
-	return []string{
+	return c.GenerateTextMessages([]string{
 		message,
 		commandGreetMessage,
-	}, nil
+	}), nil
 }
 
-func sentimentCommandTrigger(event BotEvent) ([]string, error) {
+func sentimentCommandTrigger(event BotEvent) ([]c.Message, error) {
 	repo.UpdateSession(event.ID, "/sentiment")
-	return []string{
+	return c.GenerateTextMessages([]string{
 		"Type the statement you want to analize",
-	}, nil
+	}), nil
 }
 
-func sentimentCommandFeedback(event BotEvent, payload ...interface{}) ([]string, error) {
+func sentimentCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Message, error) {
 	ID := event.ID
 	input := payload[0].(string)
 
@@ -247,19 +262,19 @@ func sentimentCommandFeedback(event BotEvent, payload ...interface{}) ([]string,
 	repo.LogSession(ID, cmd, input, message)
 	repo.UpdateSession(ID, "")
 
-	return []string{
+	return c.GenerateTextMessages([]string{
 		message,
-	}, nil
+	}), nil
 }
 
-func summarizeCommandTrigger(event BotEvent) ([]string, error) {
+func summarizeCommandTrigger(event BotEvent) ([]c.Message, error) {
 	repo.UpdateSession(event.ID, "/summarize")
-	return []string{
+	return c.GenerateTextMessages([]string{
 		"Type the statement or url you want to summarise",
-	}, nil
+	}), nil
 }
 
-func summarizeCommandFeedback(event BotEvent, payload ...interface{}) ([]string, error) {
+func summarizeCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Message, error) {
 	ID := event.ID
 	input := payload[0].(string)
 
@@ -279,12 +294,12 @@ func summarizeCommandFeedback(event BotEvent, payload ...interface{}) ([]string,
 	repo.LogSession(ID, cmd, input, message)
 	repo.UpdateSession(ID, "")
 
-	return []string{
+	return c.GenerateTextMessages([]string{
 		message,
-	}, nil
+	}), nil
 }
 
-func covid19CommandTrigger(event BotEvent) ([]string, error) {
+func covid19CommandTrigger(event BotEvent) ([]c.Message, error) {
 	cmd := "/corona"
 
 	data, _ := repo.GetCovid19Data()
@@ -303,10 +318,10 @@ func covid19CommandTrigger(event BotEvent) ([]string, error) {
 
 	repo.LogSession(event.ID, cmd, "", "")
 
-	return messages, nil
+	return c.GenerateTextMessages(messages), nil
 }
 
-func covid19SubscribeCommandTrigger(event BotEvent) ([]string, error) {
+func covid19SubscribeCommandTrigger(event BotEvent) ([]c.Message, error) {
 	ID := event.ID
 	provider := event.Provider
 
@@ -318,5 +333,5 @@ func covid19SubscribeCommandTrigger(event BotEvent) ([]string, error) {
 	repo.SetCovid19SubsData(ID, provider)
 	repo.LogSession(ID, cmd, "", "")
 
-	return messages, nil
+	return c.GenerateTextMessages(messages), nil
 }
