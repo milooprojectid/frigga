@@ -16,7 +16,7 @@ const apiURL = "https://graph.facebook.com"
 
 // EventAdapter ...
 func EventAdapter(ctx iris.Context) ([]Messaging, error) {
-	var event Event
+	var event BotEvent
 	var messagings []Messaging
 	if err := ctx.ReadJSON(&event); err != nil {
 		return messagings, err

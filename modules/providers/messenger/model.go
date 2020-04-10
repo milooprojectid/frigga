@@ -39,8 +39,8 @@ type entry struct {
 	Messaging []Messaging `json:"messaging"`
 }
 
-// Event ...
-type Event struct {
+// BotEvent ...
+type BotEvent struct {
 	Object string  `json:"object"`
 	Entry  []entry `json:"entry"`
 }

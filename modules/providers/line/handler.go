@@ -15,7 +15,7 @@ import (
 const apiURL = "https://api.line.me/v2/bot"
 
 // EventAdapter ...
-func EventAdapter(ctx iris.Context) ([]Event, error) {
+func EventAdapter(ctx iris.Context) ([]BotEvent, error) {
 	var request Request
 	if err := ctx.ReadJSON(&request); err != nil {
 		return request.Events, err

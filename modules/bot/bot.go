@@ -8,7 +8,7 @@ type Bot struct {
 	Commands *commands
 }
 
-func (b *Bot) dispatch(e Event, r chan eventReply) {
+func (b *Bot) dispatch(e BotEvent, r chan BotReply) {
 	if ok := e.isInline(); ok {
 		r <- Commands.executeInline(e, b.Provider.Name)
 	} else {
@@ -18,7 +18,7 @@ func (b *Bot) dispatch(e Event, r chan eventReply) {
 
 // Handler will intercept incoming request and pass it to provider
 func (b *Bot) Handler(ctx iris.Context) {
-	replyChannel := make(chan eventReply)
+	replyChannel := make(chan BotReply)
 
 	// Process event concurrently
 	events, _ := b.Provider.EventAdapter(ctx)

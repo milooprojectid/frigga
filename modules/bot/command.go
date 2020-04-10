@@ -23,8 +23,8 @@ const commandFailedMessage = "Hmm, sorry i have problem processing your message 
 type Command struct {
 	Name     string
 	Path     string
-	Trigger  func(event Event) ([]string, error)
-	Feedback func(event Event, output ...interface{}) ([]string, error)
+	Trigger  func(event BotEvent) ([]string, error)
+	Feedback func(event BotEvent, output ...interface{}) ([]string, error)
 }
 
 type commands []Command
@@ -42,8 +42,8 @@ func (cs *commands) getCommand(path string) *Command {
 	return command
 }
 
-func getUnknownEventReply(token string) eventReply {
-	return eventReply{
+func getUnknownEventReply(token string) BotReply {
+	return BotReply{
 		Messages: c.GenerateTextMessages([]string{
 			"I dont know that command ._.",
 			commandGreetMessage,
@@ -53,9 +53,9 @@ func getUnknownEventReply(token string) eventReply {
 	}
 }
 
-func (cs *commands) execute(event Event, provider string) eventReply {
+func (cs *commands) execute(event BotEvent, provider string) BotReply {
 	var command *Command
-	var reply eventReply
+	var reply BotReply
 
 	if event.isTrigger() {
 		if command = cs.getCommand(event.Message.Text); command == nil {
@@ -66,14 +66,14 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 				eventType = "feedback"
 			}
 			messages, _ := command.Trigger(event)
-			reply = eventReply{
+			reply = BotReply{
 				Messages: c.GenerateTextMessages(messages),
 				Token:    event.Token,
 				Type:     eventType,
 			}
 		}
 	} else if cmd, _ := repo.GetSession(event.ID); cmd == "" {
-		reply = eventReply{
+		reply = BotReply{
 			Messages: c.GenerateTextMessages([]string{
 				"No active command",
 				commandGreetMessage,
@@ -84,7 +84,7 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 	} else {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event, event.Message.Text)
-		reply = eventReply{
+		reply = BotReply{
 			Messages: c.GenerateTextMessages(messages),
 			Token:    event.Token,
 			Type:     "feedback",
@@ -94,15 +94,15 @@ func (cs *commands) execute(event Event, provider string) eventReply {
 	return reply
 }
 
-func (cs *commands) executeInline(event Event, provider string) eventReply {
-	var reply eventReply
+func (cs *commands) executeInline(event BotEvent, provider string) BotReply {
+	var reply BotReply
 	commandPath, input, _ := event.getCommandAndInput()
 
 	if command := cs.getCommand(commandPath); command == nil {
 		reply = getUnknownEventReply(event.Token)
 	} else {
 		messages, _ := command.Feedback(event, input)
-		reply = eventReply{
+		reply = BotReply{
 			Messages: c.GenerateTextMessages(messages),
 			Token:    event.Token,
 			Type:     "feedback",
@@ -170,9 +170,9 @@ func RegisterCommands() {
 	}
 }
 
-// explicit handler
+// Explicit handler
 
-func startCommandTrigger(event Event) ([]string, error) {
+func startCommandTrigger(event BotEvent) ([]string, error) {
 	var getter func(id string) (string, error)
 
 	ID := event.ID
@@ -199,11 +199,11 @@ func startCommandTrigger(event Event) ([]string, error) {
 	}, nil
 }
 
-func helpCommandTrigger(event Event) ([]string, error) {
+func helpCommandTrigger(event BotEvent) ([]string, error) {
 	return []string{commandGreetMessage}, nil
 }
 
-func cancelCommandTrigger(event Event) ([]string, error) {
+func cancelCommandTrigger(event BotEvent) ([]string, error) {
 	ID := event.ID
 	var message string
 
@@ -220,14 +220,14 @@ func cancelCommandTrigger(event Event) ([]string, error) {
 	}, nil
 }
 
-func sentimentCommandTrigger(event Event) ([]string, error) {
+func sentimentCommandTrigger(event BotEvent) ([]string, error) {
 	repo.UpdateSession(event.ID, "/sentiment")
 	return []string{
 		"Type the statement you want to analize",
 	}, nil
 }
 
-func sentimentCommandFeedback(event Event, payload ...interface{}) ([]string, error) {
+func sentimentCommandFeedback(event BotEvent, payload ...interface{}) ([]string, error) {
 	ID := event.ID
 	input := payload[0].(string)
 
@@ -252,14 +252,14 @@ func sentimentCommandFeedback(event Event, payload ...interface{}) ([]string, er
 	}, nil
 }
 
-func summarizeCommandTrigger(event Event) ([]string, error) {
+func summarizeCommandTrigger(event BotEvent) ([]string, error) {
 	repo.UpdateSession(event.ID, "/summarize")
 	return []string{
 		"Type the statement or url you want to summarise",
 	}, nil
 }
 
-func summarizeCommandFeedback(event Event, payload ...interface{}) ([]string, error) {
+func summarizeCommandFeedback(event BotEvent, payload ...interface{}) ([]string, error) {
 	ID := event.ID
 	input := payload[0].(string)
 
@@ -284,7 +284,7 @@ func summarizeCommandFeedback(event Event, payload ...interface{}) ([]string, er
 	}, nil
 }
 
-func covid19CommandTrigger(event Event) ([]string, error) {
+func covid19CommandTrigger(event BotEvent) ([]string, error) {
 	cmd := "/corona"
 
 	data, _ := repo.GetCovid19Data()
@@ -306,7 +306,7 @@ func covid19CommandTrigger(event Event) ([]string, error) {
 	return messages, nil
 }
 
-func covid19SubscribeCommandTrigger(event Event) ([]string, error) {
+func covid19SubscribeCommandTrigger(event BotEvent) ([]string, error) {
 	ID := event.ID
 	provider := event.Provider
 

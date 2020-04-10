@@ -6,25 +6,25 @@ import (
 	"strings"
 )
 
-// Event ...
-type Event struct {
+// BotEvent ...
+type BotEvent struct {
 	ID       string
 	Message  c.Message
 	Provider string
 	Token    string
 }
 
-type eventReply struct {
+type BotReply struct {
 	Messages []c.Message
 	Token    string
 	Type     string
 }
 
-func (e Event) isTrigger() bool {
+func (e BotEvent) isTrigger() bool {
 	return e.Message.Text != "" && string(e.Message.Text[0]) == "/"
 }
 
-func (e Event) isInline() bool {
+func (e BotEvent) isInline() bool {
 	var message string = e.Message.Text
 
 	if message == "" {
@@ -43,7 +43,7 @@ func (e Event) isInline() bool {
 	return true
 }
 
-func (e Event) getCommandAndInput() (string, string, error) {
+func (e BotEvent) getCommandAndInput() (string, string, error) {
 	var message string = e.Message.Text
 	var command string
 	var input string
@@ -67,6 +67,6 @@ func (e Event) getCommandAndInput() (string, string, error) {
 	return command, input, nil
 }
 
-func (e eventReply) isTrigger() bool {
+func (e BotReply) isTrigger() bool {
 	return e.Type == "trigger"
 }

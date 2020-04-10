@@ -3,8 +3,8 @@ package line
 // Name ...
 const Name = "line"
 
-// Event ...
-type Event struct {
+// BotEvent ...
+type BotEvent struct {
 	ReplyToken string `json:"replyToken"`
 	Type       string `json:"type"`
 	Mode       string `json:"mode"`
@@ -49,7 +49,7 @@ type ReplyMessage struct {
 // Request ...
 type Request struct {
 	Destination string  `json:"destination"`
-	Events      []Event `json:"events"`
+	Events      []BotEvent `json:"events"`
 }
 
 type userProfile struct {
