@@ -3,8 +3,8 @@ package line
 // Name ...
 const Name = "line"
 
-// BotEvent ...
-type BotEvent struct {
+// Event ...
+type Event struct {
 	ReplyToken string `json:"replyToken"`
 	Type       string `json:"type"`
 	Mode       string `json:"mode"`
@@ -39,17 +39,36 @@ type QuickReply struct {
 	Items []QuickReplyItem `json:"items"`
 }
 
-// ReplyMessage ...
-type ReplyMessage struct {
+// TextReplyMessage ...
+type TextReplyMessage struct {
 	Type       string      `json:"type"`
 	Text       string      `json:"text"`
+	QuickReply *QuickReply `json:"quickReply,omitempty"`
+}
+
+// MediaReplyMessage ...
+type MediaReplyMessage struct {
+	Type               string      `json:"type"`
+	OriginalContentURL string      `json:"originalContentUrl"`
+	PreviewImageURL    *string     `json:"previewImageUrl,omitempty"`
+	Duration           *int        `json:"duration,omitempty"`
+	QuickReply         *QuickReply `json:"quickReply,omitempty"`
+}
+
+// LocationReplyMessage ...
+type LocationReplyMessage struct {
+	Type       string      `json:"type"`
+	Title      string      `json:"title"`
+	Address    string      `json:"address"`
+	Latitude   float64     `json:"latitude"`
+	Longitude  float64     `json:"longitude"`
 	QuickReply *QuickReply `json:"quickReply,omitempty"`
 }
 
 // Request ...
 type Request struct {
 	Destination string  `json:"destination"`
-	Events      []BotEvent `json:"events"`
+	Events      []Event `json:"events"`
 }
 
 type userProfile struct {

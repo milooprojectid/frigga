@@ -63,28 +63,18 @@ func EventReplier(message c.Message, replyMarkup *ReplyMarkup, chatID string) er
 	var payload interface{}
 
 	switch message.Type {
-	case c.TextMessageType:
-		payload = TextMessageReply{
-			Text:                  message.Text,
-			ChatID:                chatID,
-			DisableWebPagePreview: true,
-			ReplyMarkup:           replyMarkup,
-		}
-
 	case c.AudioMessageType:
 		payload = AudioMessageReply{
 			Audio:       message.Text,
 			ChatID:      chatID,
 			ReplyMarkup: replyMarkup,
 		}
-
 	case c.VideoMessageType:
 		payload = VideoMessageReply{
 			Video:       message.Text,
 			ChatID:      chatID,
 			ReplyMarkup: replyMarkup,
 		}
-
 	case c.ImageMessageType:
 		payload = ImageMessageReply{
 			Photo:                 message.Text,
@@ -92,7 +82,6 @@ func EventReplier(message c.Message, replyMarkup *ReplyMarkup, chatID string) er
 			DisableWebPagePreview: true,
 			ReplyMarkup:           replyMarkup,
 		}
-
 	case c.LocationMessageType:
 		{
 			splitted := strings.Split(message.Text, ",")
@@ -105,7 +94,13 @@ func EventReplier(message c.Message, replyMarkup *ReplyMarkup, chatID string) er
 				ReplyMarkup: replyMarkup,
 			}
 		}
-
+	default:
+		payload = TextMessageReply{
+			Text:                  message.Text,
+			ChatID:                chatID,
+			DisableWebPagePreview: true,
+			ReplyMarkup:           replyMarkup,
+		}
 	}
 
 	return SendMessages(payload, message.Type)

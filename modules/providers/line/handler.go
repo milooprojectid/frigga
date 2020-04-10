@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/kataras/iris"
@@ -15,7 +17,7 @@ import (
 const apiURL = "https://api.line.me/v2/bot"
 
 // EventAdapter ...
-func EventAdapter(ctx iris.Context) ([]BotEvent, error) {
+func EventAdapter(ctx iris.Context) ([]Event, error) {
 	var request Request
 	if err := ctx.ReadJSON(&request); err != nil {
 		return request.Events, err
@@ -47,22 +49,59 @@ func SendMessages(payload interface{}) error {
 
 // EventReplier ...
 func EventReplier(messages []c.Message, quickReply *QuickReply, replyToken string) error {
-	var replyMessages []ReplyMessage
+	var replyMessages []interface{}
 
 	for _, message := range messages {
-		replyMessages = append(replyMessages, ReplyMessage{
-			Type:       "text",
-			Text:       message.Text,
-			QuickReply: quickReply,
-		})
+		var payload interface{}
+
+		switch message.Type {
+		case c.AudioMessageType:
+			payload = MediaReplyMessage{
+				Type:               "audio",
+				OriginalContentURL: message.Text,
+				QuickReply:         quickReply,
+			}
+		case c.VideoMessageType:
+			payload = MediaReplyMessage{
+				Type:               "video",
+				OriginalContentURL: message.Text,
+				QuickReply:         quickReply,
+			}
+		case c.ImageMessageType:
+			payload = MediaReplyMessage{
+				Type:               "image",
+				OriginalContentURL: message.Text,
+				QuickReply:         quickReply,
+			}
+		case c.LocationMessageType:
+			{
+				splitted := strings.Split(message.Text, ",")
+				lat, _ := strconv.ParseFloat(splitted[0], 64)
+				lon, _ := strconv.ParseFloat(splitted[1], 64)
+				payload = LocationReplyMessage{
+					Type:       "location",
+					Latitude:   lat,
+					Longitude:  lon,
+					QuickReply: quickReply,
+				}
+			}
+		default:
+			payload = TextReplyMessage{
+				Type:       "text",
+				Text:       message.Text,
+				QuickReply: quickReply,
+			}
+		}
+
+		replyMessages = append(replyMessages, payload)
 	}
 
-	payload := map[string]interface{}{
+	payloadData := map[string]interface{}{
 		"to":       replyToken,
 		"messages": replyMessages,
 	}
 
-	return SendMessages(payload)
+	return SendMessages(payloadData)
 }
 
 // GetUserName ...
