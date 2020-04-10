@@ -171,6 +171,13 @@ func RegisterCommands() {
 		Trigger: covid19SubscribeCommandTrigger,
 	}
 
+	typeTesCommand := Command{
+		Name:     "TypeTest",
+		Path:     "/test",
+		Trigger:  typeTesterCommandTrigger,
+		Feedback: typeTesterCommandFeedback,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
@@ -180,6 +187,7 @@ func RegisterCommands() {
 		summarizeCommand,
 		covid19SummaryCommand,
 		covid19SubscriptionCommand,
+		typeTesCommand,
 	}
 }
 
@@ -334,4 +342,47 @@ func covid19SubscribeCommandTrigger(event BotEvent) ([]c.Message, error) {
 	repo.LogSession(ID, cmd, "", "")
 
 	return c.GenerateTextMessages(messages), nil
+}
+
+func typeTesterCommandTrigger(event BotEvent) ([]c.Message, error) {
+	return c.GenerateTextMessages([]string{
+		"Ahoy sailor, youve come to test jaa ?",
+	}), nil
+}
+
+func typeTesterCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Message, error) {
+	var response c.Message
+	var outType string = payload[0].(string)
+
+	switch outType {
+	case c.TextMessageType:
+		{
+			response = c.GenerateTextMessage("hi, i am a plain text, like your relationship :)")
+		}
+
+	case c.AudioMessageType:
+		{
+			response = c.GenerateTextMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/audio-example.mp3?alt=media&token=5684a144-6d09-42db-88d4-29c1445225ef")
+		}
+
+	case c.VideoMessageType:
+		{
+			response = c.GenerateTextMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/video-example.mp4?alt=media&token=13def274-3b0d-4771-9f15-6ab18064087b")
+		}
+
+	case c.ImageMessageType:
+		{
+			response = c.GenerateImageMessage("https://firebasestorage.googleapis.com/v0/b/miloo-phoenix.appspot.com/o/miloo-edited.png?alt=media&token=94ddd99a-d801-48c4-9345-98bffd91b264")
+		}
+
+	case c.LocationMessageType:
+		{
+			response = c.GenerateLocationMessage("-6.202436, 106.825993")
+		}
+
+	}
+
+	return []c.Message{
+		response,
+	}, nil
 }

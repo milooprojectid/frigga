@@ -6,11 +6,11 @@ package common
 // ImageMessageType ..
 // LocationMessageType ..
 const (
-	TextMessageType     = "text"
-	AudioMessageType    = "audio"
-	VideoMessageType    = "video"
-	ImageMessageType    = "image"
-	LocationMessageType = "location"
+	TextMessageType     string = "text"
+	AudioMessageType    string = "audio"
+	VideoMessageType    string = "video"
+	ImageMessageType    string = "image"
+	LocationMessageType string = "location"
 )
 
 // Message ..
@@ -33,5 +33,37 @@ func GenerateTextMessage(text string) Message {
 	return Message{
 		Text: text,
 		Type: TextMessageType,
+	}
+}
+
+// GenerateVideoMessage ...
+func GenerateVideoMessage(url string) Message {
+	return Message{
+		Text: url,
+		Type: VideoMessageType,
+	}
+}
+
+// GenerateAudioMessage ...
+func GenerateAudioMessage(url string) Message {
+	return Message{
+		Text: url,
+		Type: AudioMessageType,
+	}
+}
+
+// GenerateImageMessage ...
+func GenerateImageMessage(url string) Message {
+	return Message{
+		Text: url,
+		Type: ImageMessageType,
+	}
+}
+
+// GenerateLocationMessage ...
+func GenerateLocationMessage(location string) Message {
+	return Message{
+		Text: location,
+		Type: LocationMessageType,
 	}
 }
