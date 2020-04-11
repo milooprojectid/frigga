@@ -16,6 +16,7 @@ require (
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4 // indirect
 	github.com/gavv/monotime v0.0.0-20190418164738-30dba4353424 // indirect
 	github.com/go-check/check v0.0.0-20190902080502-41f04d3bba15 // indirect
+	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang/protobuf v1.3.3
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
@@ -36,6 +37,7 @@ require (
 	github.com/klauspost/compress v1.10.1 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
@@ -62,6 +64,7 @@ require (
 	google.golang.org/api v0.19.0
 	google.golang.org/genproto v0.0.0-20200225123651-fc8f55426688 // indirect
 	google.golang.org/grpc v1.27.1
+	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

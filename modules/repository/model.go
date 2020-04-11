@@ -14,3 +14,11 @@ type Covid19Data struct {
 	Recovered int `firestore:"recovered" json:"recovered"`
 	Deceased  int `firestore:"deceased" json:"deceased"`
 }
+
+// BotSession ...
+type BotSession struct {
+	ActiveCommand string `firestore:"activeCommand" json:"activeCommand"`
+	Name          string `firestore:"name" json:"name"`
+	Provider      string `firestore:"provider" json:"provider"`
+	UserID        string `firestore:"userId" json:"userId"`
+}

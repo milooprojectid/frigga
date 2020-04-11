@@ -128,3 +128,32 @@ func GetCovid19Subscription() ([]Covid19Subcription, error) {
 
 	return covid19Subscriptions, nil
 }
+
+// GetAllBotSessions ...
+func GetAllBotSessions(isProd bool) ([]BotSession, error) {
+	botSessions := []BotSession{}
+	var session BotSession
+	var path string
+
+	if isProd {
+		path = "bot_sessions"
+	} else {
+		path = "bot_sessions_test"
+	}
+
+	ctx := context.Background()
+	iter := d.FS.Collection(path).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return botSessions, err
+		}
+		doc.DataTo(&session)
+		botSessions = append(botSessions, session)
+	}
+
+	return botSessions, nil
+}
