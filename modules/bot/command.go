@@ -114,11 +114,20 @@ func (cs *commands) executeInline(event BotEvent, provider string) BotReply {
 	if command := cs.getCommand(commandPath); command == nil {
 		reply = getUnknownEventReply(event.Token)
 	} else {
-		messages, _ := command.Feedback(event, input)
-		reply = BotReply{
-			Messages: messages,
-			Token:    event.Token,
-			Type:     "feedback",
+		if messages, err := command.Feedback(event, input); err != nil {
+			reply = BotReply{
+				Messages: c.GenerateTextMessages([]string{
+					commandFailedMessage,
+				}),
+				Token: event.Token,
+				Type:  "feedback",
+			}
+		} else {
+			reply = BotReply{
+				Messages: messages,
+				Token:    event.Token,
+				Type:     "feedback",
+			}
 		}
 	}
 
