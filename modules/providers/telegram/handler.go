@@ -136,20 +136,19 @@ func GetUserName(chatID string) (string, error) {
 }
 
 // GetCommandQuickReply ...
-func GetCommandQuickReply() *ReplyMarkup {
-	quick := &ReplyMarkup{
-		InlineKeyboard: []InlineKeyboard{
-			InlineKeyboard{
-				Text: "/summarize",
-			},
-			InlineKeyboard{
-				Text: "/sentiment",
-			},
-			InlineKeyboard{
-				Text: "/corona",
-			},
-		},
+func GetCommandQuickReply(commands []string) *ReplyMarkup {
+	var quicks []InlineKeyboard
+
+	for _, path := range commands {
+		quicks = append(quicks, InlineKeyboard{
+			Text:         path,
+			CallbackData: path,
+		})
 	}
 
-	return quick
+	return &ReplyMarkup{
+		InlineKeyboard: [][]InlineKeyboard{
+			quicks,
+		},
+	}
 }

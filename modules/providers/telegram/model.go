@@ -89,13 +89,13 @@ type Update struct {
 
 // InlineKeyboard ...
 type InlineKeyboard struct {
-	Text string  `json:"text"`
-	URL  *string `json:"url,omitempty"`
+	Text         string `json:"text"`
+	CallbackData string `json:"callback_data,omitempty"`
 }
 
 // ReplyMarkup ...
 type ReplyMarkup struct {
-	InlineKeyboard []InlineKeyboard `json:"inline_keyboard"`
+	InlineKeyboard [][]InlineKeyboard `json:"inline_keyboard"`
 }
 
 // TextMessageReply ...

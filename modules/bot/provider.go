@@ -52,7 +52,8 @@ func GetProvider(name string) Provider {
 				EventReplier: func(rep BotReply) {
 					var replyMarkup *telegram.ReplyMarkup
 					// if !rep.isTrigger() {
-					// 	replyMarkup = telegram.GetCommandQuickReply()
+					// 	commands := GetAvailableCommandsPath()
+					// 	replyMarkup = telegram.GetCommandQuickReply(commands)
 					// }
 					for _, message := range rep.Messages {
 						telegram.EventReplier(message, replyMarkup, rep.Token)
@@ -93,7 +94,8 @@ func GetProvider(name string) Provider {
 				EventReplier: func(rep BotReply) {
 					var quickReply *line.QuickReply
 					if !rep.isTrigger() {
-						quickReply = line.GetCommandQuickReply()
+						commands := GetAvailableCommandsPath()
+						quickReply = line.GetCommandQuickReply(commands)
 					}
 
 					err := line.EventReplier(rep.Messages, quickReply, rep.Token)
@@ -125,7 +127,8 @@ func GetProvider(name string) Provider {
 				EventReplier: func(rep BotReply) {
 					var quickReplies *[]messenger.QuickReply
 					if !rep.isTrigger() {
-						quickReplies = messenger.GetCommandQuickReply()
+						commands := GetAvailableCommandsPath()
+						quickReplies = messenger.GetCommandQuickReply(commands)
 					}
 
 					for _, message := range rep.Messages {

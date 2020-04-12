@@ -90,31 +90,18 @@ func GetUserName(PSID string) (string, error) {
 }
 
 // GetCommandQuickReply ...
-func GetCommandQuickReply() *[]QuickReply {
-	quick := &[]QuickReply{
-		QuickReply{
+func GetCommandQuickReply(commands []string) *[]QuickReply {
+	var quicks []QuickReply
+
+	for _, path := range commands {
+		quicks = append(quicks, QuickReply{
 			ContentType: "text",
-			Title:       "/sentiment",
-			Payload:     "/sentiment",
-		},
-		QuickReply{
-			ContentType: "text",
-			Title:       "/summarize",
-			Payload:     "/summarize",
-		},
-		QuickReply{
-			ContentType: "text",
-			Title:       "/corona",
-			Payload:     "/corona",
-		},
-		QuickReply{
-			ContentType: "text",
-			Title:       "/subscov19",
-			Payload:     "/subscov19",
-		},
+			Title:       path,
+			Payload:     path,
+		})
 	}
 
-	return quick
+	return &quicks
 }
 
 // VerifySignature ...

@@ -136,42 +136,21 @@ func GetUserName(userID string) (string, error) {
 }
 
 // GetCommandQuickReply ...
-func GetCommandQuickReply() *QuickReply {
-	quick := &QuickReply{
-		Items: []QuickReplyItem{
-			QuickReplyItem{
-				Type: "action",
-				Action: ItemAction{
-					Type:  "message",
-					Label: "sentiment",
-					Text:  "/sentiment",
-				},
+func GetCommandQuickReply(commands []string) *QuickReply {
+	var items []QuickReplyItem
+
+	for _, path := range commands {
+		items = append(items, QuickReplyItem{
+			Type: "action",
+			Action: ItemAction{
+				Type:  "message",
+				Label: path,
+				Text:  path,
 			},
-			QuickReplyItem{
-				Type: "action",
-				Action: ItemAction{
-					Type:  "message",
-					Label: "summarize",
-					Text:  "/summarize",
-				},
-			},
-			QuickReplyItem{
-				Type: "action",
-				Action: ItemAction{
-					Type:  "message",
-					Label: "covid-19 status",
-					Text:  "/corona",
-				},
-			},
-			QuickReplyItem{
-				Type: "action",
-				Action: ItemAction{
-					Type:  "message",
-					Label: "covid-19 notif",
-					Text:  "/subscov19",
-				},
-			},
-		},
+		})
 	}
-	return quick
+
+	return &QuickReply{
+		Items: items,
+	}
 }

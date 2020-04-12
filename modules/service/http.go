@@ -20,10 +20,9 @@ func replyWorker(message c.Message, provider string, replyToken string) {
 
 	case line.Name:
 		{
-			quickReply := line.GetCommandQuickReply()
 			line.EventReplier([]c.Message{
 				message,
-			}, quickReply, replyToken)
+			}, nil, replyToken)
 		}
 
 	case messenger.Name:
