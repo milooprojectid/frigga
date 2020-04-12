@@ -114,20 +114,11 @@ func (cs *commands) executeInline(event BotEvent, provider string) BotReply {
 	if command := cs.getCommand(commandPath); command == nil {
 		reply = getUnknownEventReply(event.Token)
 	} else {
-		if messages, err := command.Feedback(event, input); err != nil {
-			reply = BotReply{
-				Messages: c.GenerateTextMessages([]string{
-					commandFailedMessage,
-				}),
-				Token: event.Token,
-				Type:  "feedback",
-			}
-		} else {
-			reply = BotReply{
-				Messages: messages,
-				Token:    event.Token,
-				Type:     "feedback",
-			}
+		messages, _ := command.Feedback(event, input)
+		reply = BotReply{
+			Messages: messages,
+			Token:    event.Token,
+			Type:     "feedback",
 		}
 	}
 
@@ -137,21 +128,24 @@ func (cs *commands) executeInline(event BotEvent, provider string) BotReply {
 // RegisterCommands ...
 func RegisterCommands() {
 	startCommand := Command{
-		Name:    "Start",
-		Path:    "/start",
-		Trigger: startCommandTrigger,
+		Name:     "Start",
+		Path:     "/start",
+		Trigger:  startCommandTrigger,
+		Feedback: feedbackNotImplemented,
 	}
 
 	helpCommand := Command{
-		Name:    "Help",
-		Path:    "/help",
-		Trigger: helpCommandTrigger,
+		Name:     "Help",
+		Path:     "/help",
+		Trigger:  helpCommandTrigger,
+		Feedback: feedbackNotImplemented,
 	}
 
 	cancelCommand := Command{
-		Name:    "Cancel",
-		Path:    "/cancel",
-		Trigger: cancelCommandTrigger,
+		Name:     "Cancel",
+		Path:     "/cancel",
+		Trigger:  cancelCommandTrigger,
+		Feedback: feedbackNotImplemented,
 	}
 
 	sentimentCommand := Command{
@@ -169,15 +163,17 @@ func RegisterCommands() {
 	}
 
 	covid19SummaryCommand := Command{
-		Name:    "Covid19",
-		Path:    "/corona",
-		Trigger: covid19CommandTrigger,
+		Name:     "Covid19",
+		Path:     "/corona",
+		Trigger:  covid19CommandTrigger,
+		Feedback: feedbackNotImplemented,
 	}
 
 	covid19SubscriptionCommand := Command{
-		Name:    "Covid19Subs",
-		Path:    "/subscov19",
-		Trigger: covid19SubscribeCommandTrigger,
+		Name:     "Covid19Subs",
+		Path:     "/subscov19",
+		Trigger:  covid19SubscribeCommandTrigger,
+		Feedback: feedbackNotImplemented,
 	}
 
 	typeTesCommand := Command{
@@ -201,6 +197,12 @@ func RegisterCommands() {
 }
 
 // Explicit handler
+
+func feedbackNotImplemented(event BotEvent, payload ...interface{}) ([]c.Message, error) {
+	return c.GenerateTextMessages([]string{
+		commandFailedMessage,
+	}), nil
+}
 
 func startCommandTrigger(event BotEvent) ([]c.Message, error) {
 	var getter func(id string) (string, error)
