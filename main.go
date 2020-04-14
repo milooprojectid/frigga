@@ -55,6 +55,7 @@ func main() {
 	service.InitializeServices()
 	service.InitializeGrpcServices()
 	bot.RegisterCommands()
+	// --
 
 	app := newApp()
 	port := os.Getenv("APP_PORT")
