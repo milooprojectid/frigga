@@ -39,6 +39,7 @@ func newApp() *iris.Application {
 	// HTTP HANDLERS
 	app.Post("subscription/notify", service.SendNotificationToSubscriptionHandler)
 	app.Post("broadcast", service.SendBroadcastMessageHandler)
+	// app.Post("worker", )
 	// ---
 
 	return app

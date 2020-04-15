@@ -9,10 +9,10 @@ type Bot struct {
 }
 
 func (b *Bot) dispatch(e BotEvent, r chan BotReply) {
-	if ok := e.isInline(); ok {
-		r <- Commands.executeInline(e, b.Provider.Name)
+	if ok := e.IsInline(); ok {
+		r <- Commands.ExecuteInline(e)
 	} else {
-		r <- Commands.execute(e, b.Provider.Name)
+		r <- Commands.Execute(e)
 	}
 }
 

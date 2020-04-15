@@ -8,10 +8,10 @@ import (
 
 // BotEvent ...
 type BotEvent struct {
-	ID       string
-	Message  c.Message
-	Provider string
-	Token    string
+	ID       string    `json:"id"`
+	Message  c.Message `json:"message"`
+	Provider string    `json:"provider"`
+	Token    string    `json:"token"`
 }
 
 type BotReply struct {
@@ -24,7 +24,8 @@ func (e BotEvent) isTrigger() bool {
 	return e.Message.Text != "" && string(e.Message.Text[0]) == "/"
 }
 
-func (e BotEvent) isInline() bool {
+// IsInline ...
+func (e BotEvent) IsInline() bool {
 	var message string = e.Message.Text
 
 	if message == "" {
