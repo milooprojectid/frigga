@@ -132,7 +132,25 @@ func GetUserName(chatID string) (string, error) {
 		name = name + " " + profile.Result.LastName
 	}
 
+	if name == "" {
+		name = profile.Result.Title
+	}
+
 	return name, nil
+}
+
+// CheckIncomingMessage ...
+func CheckIncomingMessage(message string) string {
+	splitted := strings.SplitN(message, "@", 2)
+	if len(splitted) != 2 {
+		return message
+	}
+
+	if splitted[1] != "miloo_bot" {
+		return ""
+	} else {
+		return splitted[0]
+	}
 }
 
 // GetCommandQuickReply ...
