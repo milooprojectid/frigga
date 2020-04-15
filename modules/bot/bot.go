@@ -1,6 +1,8 @@
 package bot
 
-import "github.com/kataras/iris"
+import (
+	"github.com/kataras/iris"
+)
 
 // Bot ...
 type Bot struct {
@@ -19,16 +21,23 @@ func (b *Bot) dispatch(e BotEvent, r chan BotReply) {
 // Handler will intercept incoming request and pass it to provider
 func (b *Bot) Handler(ctx iris.Context) {
 	replyChannel := make(chan BotReply)
-
-	// Process event concurrently
 	events, _ := b.Provider.EventAdapter(ctx)
-	for _, event := range events {
-		go b.dispatch(event, replyChannel)
-	}
+	isWithWorker := true
 
-	// Reply Result to Client
-	for i := 0; i < len(events); i++ {
-		go b.Provider.EventReplier(<-replyChannel)
+	if isWithWorker {
+		for _, event := range events {
+			DispatchBotEventWorker(event)
+		}
+	} else {
+		// Process event concurrently
+		for _, event := range events {
+			go b.dispatch(event, replyChannel)
+		}
+
+		// Reply Result to Client
+		for i := 0; i < len(events); i++ {
+			go b.Provider.EventReplier(<-replyChannel)
+		}
 	}
 
 	ctx.JSON(map[string]string{

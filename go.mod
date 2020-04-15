@@ -3,6 +3,7 @@ module frigga
 go 1.13
 
 require (
+	cloud.google.com/go v0.53.0
 	cloud.google.com/go/firestore v1.1.1
 	cloud.google.com/go/storage v1.6.0 // indirect
 	firebase.google.com/go v3.12.0+incompatible
@@ -62,7 +63,7 @@ require (
 	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
 	golang.org/x/tools v0.0.0-20200226154504-48cfad2f5e00 // indirect
 	google.golang.org/api v0.19.0
-	google.golang.org/genproto v0.0.0-20200225123651-fc8f55426688 // indirect
+	google.golang.org/genproto v0.0.0-20200225123651-fc8f55426688
 	google.golang.org/grpc v1.27.1
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0

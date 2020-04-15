@@ -54,8 +54,11 @@ func main() {
 
 	// initialize singletons
 	driver.InitializeFirestore()
+	driver.InitializeCloudTask()
+
 	service.InitializeServices()
 	service.InitializeGrpcServices()
+
 	bot.RegisterCommands()
 	// --
 
