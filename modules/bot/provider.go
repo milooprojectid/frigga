@@ -40,12 +40,15 @@ func GetProvider(name string) Provider {
 					var events []BotEvent
 					updates, _ := telegram.EventAdapter(ctx)
 					for _, update := range updates {
-						events = append(events, BotEvent{
-							ID:       strconv.Itoa(update.Message.Chat.ID),
-							Message:  c.GenerateTextMessage(trim(update.Message.Text)),
-							Token:    strconv.Itoa(update.Message.Chat.ID),
-							Provider: telegram.Name,
-						})
+						message := telegram.CheckIncomingMessage(update.Message.Text)
+						if message != "" {
+							events = append(events, BotEvent{
+								ID:       strconv.Itoa(update.Message.Chat.ID),
+								Message:  c.GenerateTextMessage(trim(message)),
+								Token:    strconv.Itoa(update.Message.Chat.ID),
+								Provider: telegram.Name,
+							})
+						}
 					}
 					return events, nil
 				},
