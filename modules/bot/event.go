@@ -8,10 +8,10 @@ import (
 
 // BotEvent ...
 type BotEvent struct {
-	ID       string    `json:"id"`
-	Message  c.Message `json:"message"`
-	Provider string    `json:"provider"`
-	Token    string    `json:"token"`
+	ID       string    `json:"id" validate:"required"`
+	Message  c.Message `json:"message" validate:"required"`
+	Provider string    `json:"provider" validate:"required"`
+	Token    string    `json:"token" validate:"required"`
 }
 
 type BotReply struct {

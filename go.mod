@@ -64,6 +64,7 @@ require (
 	google.golang.org/api v0.19.0
 	google.golang.org/genproto v0.0.0-20200225123651-fc8f55426688 // indirect
 	google.golang.org/grpc v1.27.1
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect

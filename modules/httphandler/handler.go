@@ -1,4 +1,4 @@
-package service
+package httphandler
 
 import (
 	"frigga/modules/bot"
@@ -64,6 +64,7 @@ func SendBroadcastMessageHandler(ctx iris.Context) {
 
 	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
+		ctx.StatusCode(iris.StatusUnprocessableEntity)
 		ctx.JSON(map[string]interface{}{
 			"message": "validation fail",
 			"data":    err.Error(),
@@ -118,6 +119,7 @@ func BotWorkerHandler(ctx iris.Context) {
 
 	validate := validator.New()
 	if err := validate.Struct(event); err != nil {
+		ctx.StatusCode(iris.StatusUnprocessableEntity)
 		ctx.JSON(map[string]interface{}{
 			"message": "validation fail",
 			"data":    err.Error(),
@@ -139,6 +141,6 @@ func BotWorkerHandler(ctx iris.Context) {
 
 	ctx.JSON(map[string]interface{}{
 		"message": "job completed",
-		"data":    nil,
+		"data":    event,
 	})
 }

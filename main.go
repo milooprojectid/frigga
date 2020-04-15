@@ -9,6 +9,7 @@ import (
 
 	bot "frigga/modules/bot"
 	driver "frigga/modules/driver"
+	http "frigga/modules/httphandler"
 	m "frigga/modules/providers/messenger"
 	service "frigga/modules/service"
 )
@@ -37,9 +38,9 @@ func newApp() *iris.Application {
 	// ---
 
 	// HTTP HANDLERS
-	app.Post("subscription/notify", service.SendNotificationToSubscriptionHandler)
-	app.Post("broadcast", service.SendBroadcastMessageHandler)
-	// app.Post("worker", )
+	app.Post("subscription/notify", http.AuthGuardMiddleware, http.SendNotificationToSubscriptionHandler)
+	app.Post("broadcast", http.AuthGuardMiddleware, http.SendBroadcastMessageHandler)
+	app.Post("worker", http.AuthGuardMiddleware, http.BotWorkerHandler)
 	// ---
 
 	return app
