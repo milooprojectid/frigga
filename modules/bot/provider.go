@@ -74,11 +74,10 @@ func GetProvider(name string) Provider {
 					for _, update := range updates {
 						if update.Type == "message" {
 							events = append(events, BotEvent{
-								ID: update.Source.UserID,
-								Message: c.Message{
-									Text: trim(update.Message.Text),
-								},
-								Token: update.Source.UserID,
+								ID:       update.Source.UserID,
+								Message:  c.GenerateTextMessage(trim(update.Message.Text)),
+								Token:    update.Source.UserID,
+								Provider: line.Name,
 							})
 						} else if update.Type == "follow" {
 							events = append(events, BotEvent{
