@@ -54,7 +54,7 @@ func DispatchBotEventWorker(event BotEvent) {
 	projectID := os.Getenv("PROJECT_ID")
 	locationID := os.Getenv("PROJECT_LOCATION")
 	authToken := os.Getenv("APP_BASE_TOKEN")
-	url := os.Getenv("PROJECT_URL")
+	url := os.Getenv("PROJECT_URL") + "/worker"
 	queueID := "bot-event"
 
 	_, err := createHTTPTask(projectID, locationID, queueID, url, event, authToken)
