@@ -15,7 +15,7 @@ import (
 var FS *firestore.Client
 
 // FSContext ...
-var FSContext *context.Context
+// var FSContext *context.Context
 
 // InitializeFirestore ...
 func InitializeFirestore() {
@@ -32,5 +32,5 @@ func InitializeFirestore() {
 	}
 
 	FS = client
-	FSContext = &ctx
+	// FSContext = &ctx
 }

@@ -3,7 +3,7 @@ steps:
     args: ["cp", "gs://miloo-bucket/environments/frigga", "./.env"]
 
   - name: "gcr.io/cloud-builders/gsutil"
-    args: ["cp", "gs://miloo-bucket/environments/firebase-service-account.json", "./firebase-service-account.json"]
+    args: ["cp", "gs://miloo-bucket/environments/service-account.json", "./service-account.json"]
 
   - name: "gcr.io/cloud-builders/docker"
     args:
