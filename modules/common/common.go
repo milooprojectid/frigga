@@ -15,8 +15,8 @@ const (
 
 // Message ..
 type Message struct {
-	Type string
-	Text string
+	Type string `json:"type" validate:"required"`
+	Text string `json:"text" validate:"required"`
 }
 
 // GenerateTextMessages ...

@@ -63,7 +63,8 @@ func getUnknownEventReply(token string) BotReply {
 	}
 }
 
-func (cs *commands) execute(event BotEvent, provider string) BotReply {
+// Execute ...
+func (cs *commands) Execute(event BotEvent) BotReply {
 	var command *Command
 	var reply BotReply
 
@@ -101,7 +102,8 @@ func (cs *commands) execute(event BotEvent, provider string) BotReply {
 	return reply
 }
 
-func (cs *commands) executeInline(event BotEvent, provider string) BotReply {
+// ExecuteInline ...
+func (cs *commands) ExecuteInline(event BotEvent) BotReply {
 	var reply BotReply
 	commandPath, input, _ := event.getCommandAndInput()
 

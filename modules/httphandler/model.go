@@ -1,4 +1,4 @@
-package service
+package httphandler
 
 // BroadcastMessage ...
 type BroadcastMessage struct {

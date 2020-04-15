@@ -1,6 +1,7 @@
-package service
+package httphandler
 
 import (
+	"frigga/modules/bot"
 	c "frigga/modules/common"
 	"frigga/modules/providers/line"
 	messenger "frigga/modules/providers/messenger"
@@ -63,6 +64,7 @@ func SendBroadcastMessageHandler(ctx iris.Context) {
 
 	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
+		ctx.StatusCode(iris.StatusUnprocessableEntity)
 		ctx.JSON(map[string]interface{}{
 			"message": "validation fail",
 			"data":    err.Error(),
@@ -108,4 +110,37 @@ func SendBroadcastMessageHandler(ctx iris.Context) {
 		"data":    sessionLength,
 	})
 	return
+}
+
+// BotWorkerHandler ...
+func BotWorkerHandler(ctx iris.Context) {
+	var event bot.BotEvent
+	ctx.ReadJSON(&event)
+
+	validate := validator.New()
+	if err := validate.Struct(event); err != nil {
+		ctx.StatusCode(iris.StatusUnprocessableEntity)
+		ctx.JSON(map[string]interface{}{
+			"message": "validation fail",
+			"data":    err.Error(),
+		})
+		return
+	}
+
+	// execute command
+	var botReply bot.BotReply
+	if ok := event.IsInline(); ok {
+		botReply = bot.Commands.ExecuteInline(event)
+	} else {
+		botReply = bot.Commands.Execute(event)
+	}
+
+	// send reply
+	provider := bot.GetProvider(event.Provider)
+	provider.EventReplier(botReply)
+
+	ctx.JSON(map[string]interface{}{
+		"message": "job completed",
+		"data":    event,
+	})
 }
