@@ -157,3 +157,27 @@ func GetAllBotSessions(isProd bool) ([]BotSession, error) {
 
 	return botSessions, nil
 }
+
+// GetAllBotFeatures ...
+func GetAllBotFeatures() ([]BotFeature, error) {
+	BotFeatures := []BotFeature{}
+	var feature BotFeature
+
+	path := "bot_data/contributors/features"
+
+	ctx := context.Background()
+	iter := d.FS.Collection(path).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return BotFeatures, err
+		}
+		doc.DataTo(&feature)
+		BotFeatures = append(BotFeatures, feature)
+	}
+
+	return BotFeatures, nil
+}

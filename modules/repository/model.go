@@ -22,3 +22,12 @@ type BotSession struct {
 	Provider      string `firestore:"provider" json:"provider"`
 	UserID        string `firestore:"userId" json:"userId"`
 }
+
+// BotFeature ...
+type BotFeature struct {
+	Name        string   `firestore:"name"`
+	Path        string   `firestore:"path"`
+	IsActive    bool     `firestore:"isActive"`
+	Description string   `firestore:"description"`
+	Persons     []string `firestore:"persons"`
+}
