@@ -22,7 +22,7 @@ func (b *Bot) dispatch(e BotEvent, r chan BotReply) {
 func (b *Bot) Handler(ctx iris.Context) {
 	replyChannel := make(chan BotReply)
 	events, _ := b.Provider.EventAdapter(ctx)
-	isWithWorker := true
+	isWithWorker := false
 
 	if isWithWorker {
 		for _, event := range events {

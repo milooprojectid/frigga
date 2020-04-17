@@ -10,9 +10,9 @@ var Commands commands
 
 // Common Messaged
 const (
-	commandGreetMessage     = "You can control me by sending these commands below"
+	commandGreetMessage     = "You can see all available command with /help"
 	commandFailedMessage    = "Hmm, sorry i have problem processing your command :("
-	commandUnknownMessage   = "I dont know that command ._."
+	commandUnknownMessage   = "Hmm, i dont know that command ._."
 	commandInactiveMessage  = "No active command"
 	commandCancelledMessage = "Command cancelled"
 )
@@ -132,66 +132,59 @@ func (cs *commands) ExecuteInline(event BotEvent) BotReply {
 // RegisterCommands ...
 func RegisterCommands() {
 	startCommand := Command{
-		Name:        "Start",
-		Path:        "/start",
-		Description: "initiate bot session",
-		IsVisible:   false,
-		Trigger:     startCommandTrigger,
-		Feedback:    nil,
+		Name:     "Start",
+		Path:     "/start",
+		Trigger:  startCommandTrigger,
+		Feedback: nil,
 	}
 
 	helpCommand := Command{
-		Name:        "Help",
-		Path:        "/help",
-		Description: "return all available commands",
-		IsVisible:   true,
-		Trigger:     helpCommandTrigger,
-		Feedback:    nil,
+		Name:     "Help",
+		Path:     "/help",
+		Trigger:  helpCommandTrigger,
+		Feedback: nil,
 	}
 
 	cancelCommand := Command{
-		Name:        "Cancel",
-		Path:        "/cancel",
-		Description: "cancel ongoing command session",
-		IsVisible:   false,
-		Trigger:     cancelCommandTrigger,
-		Feedback:    nil,
+		Name:     "Cancel",
+		Path:     "/cancel",
+		Trigger:  cancelCommandTrigger,
+		Feedback: nil,
 	}
 
 	sentimentCommand := Command{
-		Name:        "Sentiment",
-		Path:        "/sentiment",
-		Description: "analize sentiment of given text",
-		IsVisible:   true,
-		Trigger:     sentimentCommandTrigger,
-		Feedback:    sentimentCommandFeedback,
+		Name:     "Sentiment",
+		Path:     "/sentiment",
+		Trigger:  sentimentCommandTrigger,
+		Feedback: sentimentCommandFeedback,
 	}
 
 	summarizeCommand := Command{
-		Name:        "Summarization",
-		Path:        "/summarize",
-		Description: "summarize content of text or news url",
-		IsVisible:   true,
-		Trigger:     summarizeCommandTrigger,
-		Feedback:    summarizeCommandFeedback,
+		Name:     "Summarization",
+		Path:     "/summarize",
+		Trigger:  summarizeCommandTrigger,
+		Feedback: summarizeCommandFeedback,
 	}
 
 	covid19ReportCommand := Command{
-		Name:        "Covid19Report",
-		Path:        "/corona",
-		Description: "show current covid-19 progress in indonesia",
-		IsVisible:   true,
-		Trigger:     covid19CommandTrigger,
-		Feedback:    nil,
+		Name:     "Covid19Report",
+		Path:     "/corona",
+		Trigger:  covid19CommandTrigger,
+		Feedback: nil,
 	}
 
 	covid19SubscriptionCommand := Command{
-		Name:        "Covid19Subs",
-		Path:        "/subscov19",
-		Description: "subscribe to covid-19 progress in indonesia daily notification",
-		IsVisible:   true,
-		Trigger:     covid19SubscribeCommandTrigger,
-		Feedback:    nil,
+		Name:     "Covid19Subs",
+		Path:     "/subscov19",
+		Trigger:  covid19SubscribeCommandTrigger,
+		Feedback: nil,
+	}
+
+	aboutCommand := Command{
+		Name:     "About",
+		Path:     "/about",
+		Trigger:  aboutCommandTrigger,
+		Feedback: nil,
 	}
 
 	// initialize to singletons
@@ -203,18 +196,6 @@ func RegisterCommands() {
 		summarizeCommand,
 		covid19ReportCommand,
 		covid19SubscriptionCommand,
+		aboutCommand,
 	}
-}
-
-// GetAvailableCommandsPath ...
-func GetAvailableCommandsPath() []string {
-	var paths []string
-
-	for _, command := range Commands {
-		if command.IsVisible {
-			paths = append(paths, command.Path)
-		}
-	}
-
-	return paths
 }

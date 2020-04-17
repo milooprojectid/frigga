@@ -10,15 +10,9 @@ import (
 	morbius "frigga/modules/service/morbius"
 	storm "frigga/modules/service/storm"
 	"frigga/modules/template"
+	"strings"
 	"time"
 )
-
-// Common
-func feedbackNotImplemented(event BotEvent, payload ...interface{}) ([]c.Message, error) {
-	return c.GenerateTextMessages([]string{
-		commandFailedMessage,
-	}), nil
-}
 
 // Common
 func startCommandTrigger(event BotEvent) ([]c.Message, error) {
@@ -44,20 +38,38 @@ func startCommandTrigger(event BotEvent) ([]c.Message, error) {
 	repo.InitSession(provider, ID, name)
 
 	return c.GenerateTextMessages([]string{
-		"Hi im Miloo\n" + commandGreetMessage,
+		"Hi im MilooBot\n" + commandGreetMessage,
 	}), nil
 }
 
 // Common
 func helpCommandTrigger(event BotEvent) ([]c.Message, error) {
-	var message string
-
-	switch event.Provider {
-	case telegram.Name:
-		message = "You can control me by typing /"
-	default:
-		message = commandGreetMessage
+	commands, _ := repo.GetAllBotFeatures("active")
+	templatePayload := map[string]interface{}{
+		"Commands": commands,
 	}
+	message := template.ProcessFile("storage/help.tmpl", templatePayload)
+
+	return c.GenerateTextMessages([]string{
+		message,
+	}), nil
+}
+
+// Common
+func aboutCommandTrigger(event BotEvent) ([]c.Message, error) {
+	features, _ := repo.GetAllBotFeatures("all")
+
+	var data = []map[string]interface{}{}
+	for _, feature := range features {
+		data = append(data, map[string]interface{}{
+			"Name":    feature.Name,
+			"Persons": strings.Join(feature.Persons, " | "),
+		})
+	}
+	templatePayload := map[string]interface{}{
+		"Features": data,
+	}
+	message := template.ProcessFile("storage/contributors.tmpl", templatePayload)
 
 	return c.GenerateTextMessages([]string{
 		message,
