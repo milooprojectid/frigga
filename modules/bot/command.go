@@ -10,9 +10,9 @@ var Commands commands
 
 // Common Messaged
 const (
-	commandGreetMessage     = "You can control me by sending these commands below"
+	commandGreetMessage     = "You can see all available command with /help"
 	commandFailedMessage    = "Hmm, sorry i have problem processing your command :("
-	commandUnknownMessage   = "I dont know that command ._."
+	commandUnknownMessage   = "Hmm, i dont know that command ._."
 	commandInactiveMessage  = "No active command"
 	commandCancelledMessage = "Command cancelled"
 )

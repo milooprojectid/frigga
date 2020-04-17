@@ -14,13 +14,6 @@ import (
 )
 
 // Common
-func feedbackNotImplemented(event BotEvent, payload ...interface{}) ([]c.Message, error) {
-	return c.GenerateTextMessages([]string{
-		commandFailedMessage,
-	}), nil
-}
-
-// Common
 func startCommandTrigger(event BotEvent) ([]c.Message, error) {
 	var getter func(id string) (string, error)
 
@@ -44,20 +37,17 @@ func startCommandTrigger(event BotEvent) ([]c.Message, error) {
 	repo.InitSession(provider, ID, name)
 
 	return c.GenerateTextMessages([]string{
-		"Hi im Miloo\n" + commandGreetMessage,
+		"Hi im MilooBot\n" + commandGreetMessage,
 	}), nil
 }
 
 // Common
 func helpCommandTrigger(event BotEvent) ([]c.Message, error) {
-	var message string
-
-	switch event.Provider {
-	case telegram.Name:
-		message = "You can control me by typing /"
-	default:
-		message = commandGreetMessage
+	commands, _ := repo.GetAllBotFeatures("active")
+	templatePayload := map[string]interface{}{
+		"Commands": commands,
 	}
+	message := template.ProcessFile("storage/help.tmpl", templatePayload)
 
 	return c.GenerateTextMessages([]string{
 		message,

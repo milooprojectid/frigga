@@ -159,14 +159,20 @@ func GetAllBotSessions(isProd bool) ([]BotSession, error) {
 }
 
 // GetAllBotFeatures ...
-func GetAllBotFeatures() ([]BotFeature, error) {
+func GetAllBotFeatures(status string) ([]BotFeature, error) {
 	BotFeatures := []BotFeature{}
 	var feature BotFeature
 
 	path := "bot_data/contributors/features"
 
 	ctx := context.Background()
-	iter := d.FS.Collection(path).Documents(ctx)
+	var iter *firestore.DocumentIterator
+	if status == "active" {
+		iter = d.FS.Collection(path).Where("isActive", "==", true).Documents(ctx)
+	} else {
+		iter = d.FS.Collection(path).Documents(ctx)
+	}
+
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
