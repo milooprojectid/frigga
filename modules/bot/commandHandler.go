@@ -10,6 +10,7 @@ import (
 	morbius "frigga/modules/service/morbius"
 	storm "frigga/modules/service/storm"
 	"frigga/modules/template"
+	"strings"
 	"time"
 )
 
@@ -48,6 +49,27 @@ func helpCommandTrigger(event BotEvent) ([]c.Message, error) {
 		"Commands": commands,
 	}
 	message := template.ProcessFile("storage/help.tmpl", templatePayload)
+
+	return c.GenerateTextMessages([]string{
+		message,
+	}), nil
+}
+
+// Common
+func aboutCommandTrigger(event BotEvent) ([]c.Message, error) {
+	features, _ := repo.GetAllBotFeatures("all")
+
+	var data = []map[string]interface{}{}
+	for _, feature := range features {
+		data = append(data, map[string]interface{}{
+			"Name":    feature.Name,
+			"Persons": strings.Join(feature.Persons, " | "),
+		})
+	}
+	templatePayload := map[string]interface{}{
+		"Features": data,
+	}
+	message := template.ProcessFile("storage/contributors.tmpl", templatePayload)
 
 	return c.GenerateTextMessages([]string{
 		message,
