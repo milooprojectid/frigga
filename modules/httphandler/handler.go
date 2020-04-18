@@ -144,3 +144,28 @@ func BotWorkerHandler(ctx iris.Context) {
 		"data":    event,
 	})
 }
+
+// BotWorkerReplyHandler ...
+func BotWorkerReplyHandler(ctx iris.Context) {
+	var replies []bot.BotReply
+	ctx.ReadJSON(&replies)
+
+	validate := validator.New()
+	if err := validate.Struct(replies); err != nil {
+		ctx.StatusCode(iris.StatusUnprocessableEntity)
+		ctx.JSON(map[string]interface{}{
+			"message": "validation fail",
+			"data":    err.Error(),
+		})
+		return
+	}
+
+	// send reply
+	// provider := bot.GetProvider(reply.)
+	// provider.EventReplier(botReply)
+
+	ctx.JSON(map[string]interface{}{
+		"message": "job completed",
+		"data":    "",
+	})
+}
