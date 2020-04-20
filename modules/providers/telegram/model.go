@@ -68,17 +68,18 @@ type location struct {
 }
 
 type message struct {
-	MessageID int       `json:"message_id"`
-	From      user      `json:"from"`
-	Date      int       `json:"date"`
-	Chat      chat      `json:"chat"`
-	Text      string    `json:"text,omitempty"`
-	Audio     audio     `json:"audio,omitempty"`
-	Document  document  `json:"document,omitempty"`
-	Video     video     `json:"video,omitempty"`
-	Voice     voice     `json:"voice,omitempty"`
-	Photo     photoSize `json:"photo,omitempty"`
-	Location  location  `json:"location,omitempty"`
+	MessageID      int       `json:"message_id"`
+	ReplyToMessage *message  `json:"reply_to_message,omitempty"`
+	From           user      `json:"from"`
+	Date           int       `json:"date"`
+	Chat           chat      `json:"chat"`
+	Text           string    `json:"text,omitempty"`
+	Audio          audio     `json:"audio,omitempty"`
+	Document       document  `json:"document,omitempty"`
+	Video          video     `json:"video,omitempty"`
+	Voice          voice     `json:"voice,omitempty"`
+	Photo          photoSize `json:"photo,omitempty"`
+	Location       location  `json:"location,omitempty"`
 }
 
 // Update ...

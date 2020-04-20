@@ -140,17 +140,26 @@ func GetUserName(chatID string) (string, error) {
 }
 
 // CheckIncomingMessage ...
-func CheckIncomingMessage(message string) string {
+func CheckIncomingMessage(update Update) string {
+	message := update.Message.Text
+
+	// check if not a reply
+	if update.Message.ReplyToMessage != nil {
+		return ""
+	}
+
+	// check if containt bot identifier
 	splitted := strings.SplitN(message, "@", 2)
 	if len(splitted) != 2 {
 		return message
 	}
 
+	// check if bot identifier id correct
 	if splitted[1] != "miloo_bot" {
 		return ""
-	} else {
-		return splitted[0]
 	}
+
+	return splitted[0]
 }
 
 // GetCommandQuickReply ...
