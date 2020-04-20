@@ -40,7 +40,7 @@ func GetProvider(name string) Provider {
 					var events []BotEvent
 					updates, _ := telegram.EventAdapter(ctx)
 					for _, update := range updates {
-						message := telegram.CheckIncomingMessage(update.Message.Text)
+						message := telegram.CheckIncomingMessage(update)
 						if message != "" {
 							events = append(events, BotEvent{
 								ID:       strconv.Itoa(update.Message.Chat.ID),
@@ -75,14 +75,14 @@ func GetProvider(name string) Provider {
 							events = append(events, BotEvent{
 								ID:       update.Source.UserID,
 								Message:  c.GenerateTextMessage(trim(update.Message.Text)),
-								Token:    update.Source.UserID,
+								Token:    update.ReplyToken, // reply or push
 								Provider: line.Name,
 							})
 						} else if update.Type == "follow" {
 							events = append(events, BotEvent{
 								ID:       update.Source.UserID,
 								Message:  c.GenerateTextMessage("/start"),
-								Token:    update.Source.UserID,
+								Token:    update.ReplyToken,
 								Provider: line.Name,
 							})
 						}
