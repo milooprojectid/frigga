@@ -152,12 +152,12 @@ func RegisterCommands() {
 		Feedback: nil,
 	}
 
-	sentimentCommand := Command{
-		Name:     "Sentiment",
-		Path:     "/sentiment",
-		Trigger:  sentimentCommandTrigger,
-		Feedback: sentimentCommandFeedback,
-	}
+	// sentimentCommand := Command{
+	// 	Name:     "Sentiment",
+	// 	Path:     "/sentiment",
+	// 	Trigger:  sentimentCommandTrigger,
+	// 	Feedback: sentimentCommandFeedback,
+	// }
 
 	summarizeCommand := Command{
 		Name:     "Summarization",
@@ -192,7 +192,7 @@ func RegisterCommands() {
 		startCommand,
 		helpCommand,
 		cancelCommand,
-		sentimentCommand,
+		// sentimentCommand,
 		summarizeCommand,
 		covid19ReportCommand,
 		covid19SubscriptionCommand,
