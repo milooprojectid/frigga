@@ -187,6 +187,13 @@ func RegisterCommands() {
 		Feedback: nil,
 	}
 
+	hadistCommand := Command{
+		Name:     "HadistRetrieval",
+		Path:     "/hadist",
+		Trigger:  hadistCommandTrigger,
+		Feedback: hadistCommandFeedback,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
@@ -197,5 +204,6 @@ func RegisterCommands() {
 		covid19ReportCommand,
 		covid19SubscriptionCommand,
 		aboutCommand,
+		hadistCommand,
 	}
 }
