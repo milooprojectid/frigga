@@ -103,9 +103,145 @@ func (m *SummarizeResponse) GetSummary() string {
 	return ""
 }
 
+type HadistRequest struct {
+	Text                 string   `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	N                    int32    `protobuf:"varint,2,opt,name=n,proto3" json:"n,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *HadistRequest) Reset()         { *m = HadistRequest{} }
+func (m *HadistRequest) String() string { return proto.CompactTextString(m) }
+func (*HadistRequest) ProtoMessage()    {}
+func (*HadistRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4dcc2fe9297aa699, []int{2}
+}
+
+func (m *HadistRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HadistRequest.Unmarshal(m, b)
+}
+func (m *HadistRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HadistRequest.Marshal(b, m, deterministic)
+}
+func (m *HadistRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HadistRequest.Merge(m, src)
+}
+func (m *HadistRequest) XXX_Size() int {
+	return xxx_messageInfo_HadistRequest.Size(m)
+}
+func (m *HadistRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_HadistRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HadistRequest proto.InternalMessageInfo
+
+func (m *HadistRequest) GetText() string {
+	if m != nil {
+		return m.Text
+	}
+	return ""
+}
+
+func (m *HadistRequest) GetN() int32 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
+type Hadist struct {
+	Source               string   `protobuf:"bytes,1,opt,name=source,proto3" json:"source,omitempty"`
+	Text                 string   `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Hadist) Reset()         { *m = Hadist{} }
+func (m *Hadist) String() string { return proto.CompactTextString(m) }
+func (*Hadist) ProtoMessage()    {}
+func (*Hadist) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4dcc2fe9297aa699, []int{3}
+}
+
+func (m *Hadist) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Hadist.Unmarshal(m, b)
+}
+func (m *Hadist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Hadist.Marshal(b, m, deterministic)
+}
+func (m *Hadist) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Hadist.Merge(m, src)
+}
+func (m *Hadist) XXX_Size() int {
+	return xxx_messageInfo_Hadist.Size(m)
+}
+func (m *Hadist) XXX_DiscardUnknown() {
+	xxx_messageInfo_Hadist.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Hadist proto.InternalMessageInfo
+
+func (m *Hadist) GetSource() string {
+	if m != nil {
+		return m.Source
+	}
+	return ""
+}
+
+func (m *Hadist) GetText() string {
+	if m != nil {
+		return m.Text
+	}
+	return ""
+}
+
+type HadistReponse struct {
+	Hadists              []*Hadist `protobuf:"bytes,1,rep,name=hadists,proto3" json:"hadists,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *HadistReponse) Reset()         { *m = HadistReponse{} }
+func (m *HadistReponse) String() string { return proto.CompactTextString(m) }
+func (*HadistReponse) ProtoMessage()    {}
+func (*HadistReponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4dcc2fe9297aa699, []int{4}
+}
+
+func (m *HadistReponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HadistReponse.Unmarshal(m, b)
+}
+func (m *HadistReponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HadistReponse.Marshal(b, m, deterministic)
+}
+func (m *HadistReponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HadistReponse.Merge(m, src)
+}
+func (m *HadistReponse) XXX_Size() int {
+	return xxx_messageInfo_HadistReponse.Size(m)
+}
+func (m *HadistReponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_HadistReponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HadistReponse proto.InternalMessageInfo
+
+func (m *HadistReponse) GetHadists() []*Hadist {
+	if m != nil {
+		return m.Hadists
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*SummarizeRequest)(nil), "SummarizeRequest")
 	proto.RegisterType((*SummarizeResponse)(nil), "SummarizeResponse")
+	proto.RegisterType((*HadistRequest)(nil), "HadistRequest")
+	proto.RegisterType((*Hadist)(nil), "hadist")
+	proto.RegisterType((*HadistReponse)(nil), "HadistReponse")
 }
 
 func init() {
@@ -113,16 +249,22 @@ func init() {
 }
 
 var fileDescriptor_4dcc2fe9297aa699 = []byte{
-	// 136 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0x2e, 0xc9, 0x2f,
-	0xca, 0xd5, 0x07, 0x93, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x4a, 0x6a, 0x5c, 0x02, 0xc1, 0xa5,
-	0xb9, 0xb9, 0x89, 0x45, 0x99, 0x55, 0xa9, 0x41, 0xa9, 0x85, 0xa5, 0xa9, 0xc5, 0x25, 0x42, 0x42,
-	0x5c, 0x2c, 0x25, 0xa9, 0x15, 0x25, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x9c, 0x41, 0x60, 0xb6, 0x92,
-	0x2e, 0x97, 0x20, 0x92, 0xba, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0x21, 0x09, 0x2e, 0xf6, 0x62,
-	0xb0, 0x60, 0x25, 0x54, 0x2d, 0x8c, 0x6b, 0xe4, 0xc4, 0xc5, 0x13, 0x0c, 0xb2, 0x25, 0x38, 0xb5,
-	0xa8, 0x2c, 0x33, 0x39, 0x55, 0xc8, 0x88, 0x8b, 0x13, 0xae, 0x5d, 0x48, 0x50, 0x0f, 0xdd, 0x4a,
-	0x29, 0x21, 0x3d, 0x0c, 0xd3, 0x93, 0xd8, 0xc0, 0x2e, 0x34, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff,
-	0x10, 0xe2, 0xa0, 0xb0, 0xb6, 0x00, 0x00, 0x00,
+	// 233 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x50, 0xcb, 0x4e, 0xc3, 0x30,
+	0x10, 0x94, 0x0b, 0x24, 0xea, 0x52, 0x1e, 0xd9, 0x03, 0x8a, 0x7a, 0x0a, 0x3e, 0xa0, 0x5c, 0x30,
+	0xaa, 0xe1, 0x23, 0x38, 0x3b, 0x5f, 0x10, 0xca, 0x4a, 0x58, 0x22, 0x71, 0xf1, 0xda, 0x15, 0xf0,
+	0xf5, 0x08, 0x27, 0x69, 0x0b, 0x48, 0x5c, 0x2c, 0xcf, 0x6a, 0x76, 0x76, 0x66, 0xa0, 0xe0, 0xe0,
+	0x7c, 0x77, 0x97, 0x5e, 0xb5, 0xf1, 0x2e, 0x38, 0x79, 0x03, 0x97, 0x4d, 0xec, 0xba, 0xd6, 0xdb,
+	0x4f, 0x32, 0xf4, 0x16, 0x89, 0x03, 0x22, 0x1c, 0x07, 0x7a, 0x0f, 0xa5, 0xa8, 0x44, 0x3d, 0x37,
+	0xe9, 0x2f, 0x6f, 0xa1, 0x38, 0xe0, 0xf1, 0xc6, 0xf5, 0x4c, 0x58, 0x42, 0xce, 0x69, 0xf8, 0x31,
+	0x72, 0x27, 0x28, 0x57, 0x70, 0xf6, 0xd8, 0x3e, 0x5b, 0x0e, 0xff, 0x68, 0xe2, 0x02, 0x44, 0x5f,
+	0xce, 0x2a, 0x51, 0x9f, 0x18, 0xd1, 0xcb, 0x07, 0xc8, 0x5e, 0xd2, 0x0a, 0x5e, 0x41, 0xc6, 0x2e,
+	0xfa, 0x35, 0x8d, 0xec, 0x11, 0xed, 0x34, 0x66, 0x07, 0xbe, 0xf4, 0xfe, 0xd0, 0xe0, 0xe9, 0x1a,
+	0xf2, 0x41, 0x86, 0x4b, 0x51, 0x1d, 0xd5, 0xa7, 0x3a, 0x57, 0x03, 0x36, 0xd3, 0x5c, 0x47, 0x58,
+	0x34, 0xdf, 0x15, 0x34, 0xe4, 0xb7, 0x76, 0x4d, 0xa8, 0x61, 0xbe, 0xcb, 0x86, 0x85, 0xfa, 0xdd,
+	0xc7, 0x12, 0xd5, 0xdf, 0xe8, 0x2b, 0xb8, 0x98, 0xee, 0x06, 0x6f, 0x69, 0xdb, 0xbe, 0xe2, 0xb9,
+	0xfa, 0x11, 0x79, 0xb9, 0xc7, 0x69, 0xe5, 0x29, 0x4b, 0x8d, 0xdf, 0x7f, 0x05, 0x00, 0x00, 0xff,
+	0xff, 0x8b, 0x9c, 0xba, 0x60, 0x86, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -138,6 +280,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type StormServiceClient interface {
 	Summarize(ctx context.Context, in *SummarizeRequest, opts ...grpc.CallOption) (*SummarizeResponse, error)
+	HadistRetrieval(ctx context.Context, in *HadistRequest, opts ...grpc.CallOption) (*HadistReponse, error)
 }
 
 type stormServiceClient struct {
@@ -157,9 +300,19 @@ func (c *stormServiceClient) Summarize(ctx context.Context, in *SummarizeRequest
 	return out, nil
 }
 
+func (c *stormServiceClient) HadistRetrieval(ctx context.Context, in *HadistRequest, opts ...grpc.CallOption) (*HadistReponse, error) {
+	out := new(HadistReponse)
+	err := c.cc.Invoke(ctx, "/StormService/HadistRetrieval", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StormServiceServer is the server API for StormService service.
 type StormServiceServer interface {
 	Summarize(context.Context, *SummarizeRequest) (*SummarizeResponse, error)
+	HadistRetrieval(context.Context, *HadistRequest) (*HadistReponse, error)
 }
 
 // UnimplementedStormServiceServer can be embedded to have forward compatible implementations.
@@ -168,6 +321,9 @@ type UnimplementedStormServiceServer struct {
 
 func (*UnimplementedStormServiceServer) Summarize(ctx context.Context, req *SummarizeRequest) (*SummarizeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Summarize not implemented")
+}
+func (*UnimplementedStormServiceServer) HadistRetrieval(ctx context.Context, req *HadistRequest) (*HadistReponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HadistRetrieval not implemented")
 }
 
 func RegisterStormServiceServer(s *grpc.Server, srv StormServiceServer) {
@@ -192,6 +348,24 @@ func _StormService_Summarize_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StormService_HadistRetrieval_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HadistRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StormServiceServer).HadistRetrieval(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/StormService/HadistRetrieval",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StormServiceServer).HadistRetrieval(ctx, req.(*HadistRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _StormService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "StormService",
 	HandlerType: (*StormServiceServer)(nil),
@@ -199,6 +373,10 @@ var _StormService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Summarize",
 			Handler:    _StormService_Summarize_Handler,
+		},
+		{
+			MethodName: "HadistRetrieval",
+			Handler:    _StormService_HadistRetrieval_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

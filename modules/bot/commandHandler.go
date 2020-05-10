@@ -245,3 +245,37 @@ func typeTesterCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Mess
 		response,
 	}, nil
 }
+
+// Hadist Retrieval
+func hadistCommandTrigger(event BotEvent) ([]c.Message, error) {
+	repo.UpdateSession(event.ID, "/hadist")
+	return c.GenerateTextMessages([]string{
+		"Type the hadist context you want to retrieve",
+	}), nil
+}
+
+// Hadist Retrieval
+func hadistCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Message, error) {
+	ID := event.ID
+	input := payload[0].(string)
+
+	messages := []string{}
+	cmd := "/hadist"
+
+	request := &storm.HadistRequest{
+		Text: input,
+	}
+
+	if response, err := (*storm.Client).HadistRetrieval(context.Background(), request); err != nil {
+		messages = append(messages, commandFailedMessage)
+	} else {
+		for _, hadist := range response.GetHadists() {
+			messages = append(messages, hadist.GetText())
+		}
+	}
+
+	repo.LogSession(ID, cmd, input, input) // store input as output
+	repo.UpdateSession(ID, "")
+
+	return c.GenerateTextMessages(messages), nil
+}
