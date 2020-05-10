@@ -15,7 +15,6 @@ func createHTTPTask(projectID string, locationID string, queueID string, url str
 
 	// Build the Task queue path.
 	queuePath := fmt.Sprintf("projects/%s/locations/%s/queues/%s", projectID, locationID, queueID)
-	fmt.Println(queuePath)
 
 	// Build the Task payload.
 	req := &taskspb.CreateTaskRequest{
