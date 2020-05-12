@@ -75,14 +75,14 @@ func GetProvider(name string) Provider {
 							events = append(events, BotEvent{
 								ID:       update.Source.UserID,
 								Message:  c.GenerateTextMessage(trim(update.Message.Text)),
-								Token:    update.ReplyToken, // reply or push
+								Token:    update.Source.UserID,
 								Provider: line.Name,
 							})
 						} else if update.Type == "follow" {
 							events = append(events, BotEvent{
 								ID:       update.Source.UserID,
 								Message:  c.GenerateTextMessage("/start"),
-								Token:    update.ReplyToken,
+								Token:    update.Source.UserID,
 								Provider: line.Name,
 							})
 						}
