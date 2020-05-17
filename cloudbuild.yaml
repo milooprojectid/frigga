@@ -10,11 +10,10 @@ steps:
       ["build", "-t", "asia.gcr.io/miloo-phoenix/frigga:$SHORT_SHA", "."]
 
   - name: "gcr.io/cloud-builders/docker"
-    args:
-      ["tag", "asia.gcr.io/miloo-phoenix/frigga:$SHORT_SHA", "asia.gcr.io/miloo-phoenix/frigga:latest"]
+    args: ["push", "asia.gcr.io/miloo-phoenix/frigga:$SHORT_SHA"]
 
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "asia.gcr.io/miloo-phoenix/frigga:$SHORT_SHA"]
+    args: ["push", "asia.gcr.io/miloo-phoenix/frigga:latest"]
 
   - name: "gcr.io/cloud-builders/gke-deploy:stable"
     args:
