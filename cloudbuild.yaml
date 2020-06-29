@@ -19,10 +19,10 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "asia.gcr.io/miloo-phoenix/frigga:latest"]
 
-  - name: "gcr.io/cloud-builders/gke-deploy:stable"
-    args:
-    - run
-    - --filename=deployment.yaml
-    - --image=asia.gcr.io/miloo-phoenix/frigga:$SHORT_SHA
-    - --location=asia-southeast1-a
-    - --cluster=main
+  # - name: "gcr.io/cloud-builders/gke-deploy:stable"
+  #   args:
+  #   - run
+  #   - --filename=deployment.yaml
+  #   - --image=asia.gcr.io/miloo-phoenix/frigga:$SHORT_SHA
+  #   - --location=asia-southeast1-a
+  #   - --cluster=main
