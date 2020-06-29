@@ -169,3 +169,10 @@ func BotWorkerReplyHandler(ctx iris.Context) {
 		"data":    "",
 	})
 }
+
+func HealthCheck(ctx iris.Context) {
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(map[string]interface{}{
+		"message": "OK",
+	})
+}
