@@ -3,6 +3,7 @@ package bot
 import (
 	c "frigga/modules/common"
 	repo "frigga/modules/repository"
+	"frigga/modules/service"
 )
 
 // Commands containts all command available
@@ -52,6 +53,19 @@ func (cs *commands) getCommand(path string) *Command {
 	return command
 }
 
+func getRasaEventReply(token string, text string) BotReply {
+	var response []struct {
+		RecipientID string `json:"recipient_id"`
+		Text        string `json:"text"`
+	}
+	service.All.CallSync("rasa", "predict", map[string]interface{}{"message": text}, &response)
+	return BotReply{
+		Messages: c.GenerateTextMessages([]string{response[0].Text}),
+		Token:    token,
+		Type:     "feedback",
+	}
+}
+
 func getUnknownEventReply(token string) BotReply {
 	return BotReply{
 		Messages: c.GenerateTextMessages([]string{
@@ -81,14 +95,7 @@ func (cs *commands) Execute(event BotEvent) BotReply {
 			}
 		}
 	} else if cmd, _ := repo.GetSession(event.ID); cmd == "" {
-		reply = BotReply{
-			Messages: c.GenerateTextMessages([]string{
-				commandInactiveMessage,
-				commandGreetMessage,
-			}),
-			Token: event.Token,
-			Type:  "feedback",
-		}
+		reply = getRasaEventReply(event.Token, event.Message.Text)
 	} else {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event, event.Message.Text)
