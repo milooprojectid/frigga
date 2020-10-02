@@ -21,7 +21,7 @@ func (b *Bot) dispatch(e BotEvent, r chan BotReply) {
 // Handler will intercept incoming request and pass it to provider
 func (b *Bot) Handler(ctx iris.Context) {
 	events, _ := b.Provider.EventAdapter(ctx)
-	isWithWorker := false
+	isWithWorker := true
 
 	if isWithWorker {
 		for _, event := range events {
