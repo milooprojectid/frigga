@@ -65,6 +65,7 @@ func (s *serviceMap) CallSync(serviceName string, methodName string, payload int
 	if err != nil {
 		return errors.New("Failed parsing json body")
 	}
+
 	json.Unmarshal(body, &output)
 
 	defer httpReponse.Body.Close()
@@ -91,7 +92,15 @@ func InitializeServices() error {
 			Protocol: "TCP",
 			Methods: map[string]string{
 				"summarizeText": "",
-				"summarizeLink": "/link",
+				"summarizeLink": "link",
+			},
+		},
+		"rasa": Service{
+			Name:     "Rasa",
+			Endpoint: os.Getenv("SERVICE_REST_RASA_URL"),
+			Protocol: "TCP",
+			Methods: map[string]string{
+				"predict": "webhooks/rest/webhook",
 			},
 		},
 	}
