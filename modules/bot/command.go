@@ -53,12 +53,18 @@ func (cs *commands) getCommand(path string) *Command {
 	return command
 }
 
-func getRasaEventReply(token string, text string) BotReply {
+func getRasaEventReply(token string, sender string, text string) BotReply {
 	var response []struct {
 		RecipientID string `json:"recipient_id"`
 		Text        string `json:"text"`
 	}
-	service.All.CallSync("rasa", "predict", map[string]interface{}{"message": text}, &response)
+
+	payload := map[string]interface{}{
+		"message": text,
+		"sender":  sender,
+	}
+
+	service.All.CallSync("rasa", "predict", payload, &response)
 	return BotReply{
 		Messages: c.GenerateTextMessages([]string{response[0].Text}),
 		Token:    token,
@@ -95,7 +101,7 @@ func (cs *commands) Execute(event BotEvent) BotReply {
 			}
 		}
 	} else if cmd, _ := repo.GetSession(event.ID); cmd == "" {
-		reply = getRasaEventReply(event.Token, event.Message.Text)
+		reply = getRasaEventReply(event.Token, event.ID, event.Message.Text)
 	} else {
 		command = cs.getCommand(cmd)
 		messages, _ := command.Feedback(event, event.Message.Text)
