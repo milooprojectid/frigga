@@ -32,6 +32,20 @@ func replyWorker(message c.Message, provider string, replyToken string) {
 
 }
 
+func generatemessage(data BroadcastMessage) c.Message {
+	var message c.Message
+	switch data.Type {
+	case c.ImageMessageType:
+		message = c.GenerateImageMessage(data.Body)
+	case c.AlbumMessageType:
+		message = c.GenerateAlbumMessage(data.Body, *data.Album)
+	default:
+		message = c.GenerateTextMessage(data.Body)
+	}
+
+	return message
+}
+
 // SendNotificationToSubscriptionHandler ...
 func SendNotificationToSubscriptionHandler(ctx iris.Context) {
 	covid19data, _ := repo.GetCovid19Data()
@@ -77,13 +91,7 @@ func SendBroadcastMessageHandler(ctx iris.Context) {
 	start := 0
 	batch := 50
 
-	var message c.Message
-	switch data.Type {
-	case c.ImageMessageType:
-		message = c.GenerateImageMessage(data.Body)
-	default:
-		message = c.GenerateTextMessage(data.Body)
-	}
+	message := generatemessage(data)
 
 	// loop per batch
 	for {
@@ -109,7 +117,31 @@ func SendBroadcastMessageHandler(ctx iris.Context) {
 		"message": "message broadcasted",
 		"data":    sessionLength,
 	})
-	return
+}
+
+// SendDirectMessageHandler ...
+func SendDirectMessageHandler(ctx iris.Context) {
+	sessionId := ctx.Params().Get("sessionId")
+
+	var data BroadcastMessage
+	ctx.ReadJSON(&data)
+
+	session, err := repo.GetBotSession(sessionId)
+	if err != nil {
+		ctx.JSON(map[string]interface{}{
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	message := generatemessage(data)
+	go replyWorker(message, session.Provider, session.UserID)
+
+	ctx.JSON(map[string]interface{}{
+		"message": "message sent",
+		"data":    session.Name,
+	})
 }
 
 // BotWorkerHandler ...

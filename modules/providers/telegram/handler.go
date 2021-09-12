@@ -49,6 +49,9 @@ func SendMessages(payload interface{}, messageType string) error {
 
 	case c.LocationMessageType:
 		url = "sendLocation"
+
+	case c.AlbumMessageType:
+		url = "sendMediaGroup"
 	}
 
 	if _, err := http.Post(apiURL+token+"/"+url, "application/json", bytes.NewBuffer(requestBody)); err != nil {
@@ -92,6 +95,25 @@ func EventReplier(message c.Message, replyMarkup *ReplyMarkup, chatID string) er
 				Latitude:    lat,
 				Longitude:   lon,
 				ReplyMarkup: replyMarkup,
+			}
+		}
+	case c.AlbumMessageType:
+		{
+			var media []Media
+			for i, item := range *message.Album {
+				messageMedia := Media{
+					Type:  item.Type,
+					Media: item.Body,
+				}
+				if i == 0 && message.Text != "" {
+					messageMedia.Caption = message.Text
+				}
+				media = append(media, messageMedia)
+			}
+
+			payload = MediaGroupMessageReply{
+				ChatID: chatID,
+				Media:  media,
 			}
 		}
 	default:

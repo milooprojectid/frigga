@@ -5,18 +5,26 @@ package common
 // VideoMessageType ..
 // ImageMessageType ..
 // LocationMessageType ..
+// AlbumMessageType ..
 const (
 	TextMessageType     string = "text"
 	AudioMessageType    string = "audio"
 	VideoMessageType    string = "video"
 	ImageMessageType    string = "image"
 	LocationMessageType string = "location"
+	AlbumMessageType    string = "album"
 )
+
+type AlbumItem struct {
+	Type string `json:"type" validate:"required,min=4"`
+	Body string `json:"body" validate:"required,min=3"`
+}
 
 // Message ..
 type Message struct {
-	Type string `json:"type" validate:"required"`
-	Text string `json:"text" validate:"required"`
+	Type  string       `json:"type" validate:"required"`
+	Text  string       `json:"text" validate:"required"`
+	Album *[]AlbumItem `json:"album,omitempty"`
 }
 
 // GenerateTextMessages ...
@@ -65,5 +73,14 @@ func GenerateLocationMessage(location string) Message {
 	return Message{
 		Text: location,
 		Type: LocationMessageType,
+	}
+}
+
+// GenerateAlbumMessage
+func GenerateAlbumMessage(text string, albumItems []AlbumItem) Message {
+	return Message{
+		Text:  text,
+		Type:  AlbumMessageType,
+		Album: &albumItems,
 	}
 }

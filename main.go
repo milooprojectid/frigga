@@ -40,6 +40,7 @@ func newApp() *iris.Application {
 	// HTTP HANDLERS
 	app.Post("subscription/notify", http.AuthGuardMiddleware, http.SendNotificationToSubscriptionHandler)
 	app.Post("broadcast", http.AuthGuardMiddleware, http.SendBroadcastMessageHandler)
+	app.Post("direct/{sessionId}", http.AuthGuardMiddleware, http.SendDirectMessageHandler)
 	app.Post("worker", http.AuthGuardMiddleware, http.BotWorkerHandler)
 	app.Get("/", http.HealthCheck)
 

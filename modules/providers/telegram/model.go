@@ -140,3 +140,15 @@ type LocationMessageReply struct {
 	Longitude   float64      `json:"longitude"`
 	ReplyMarkup *ReplyMarkup `json:"reply_markup,omitempty"`
 }
+
+// LocationMessageReply ...
+type MediaGroupMessageReply struct {
+	ChatID string  `json:"chat_id"`
+	Media  []Media `json:"media"`
+}
+
+type Media struct {
+	Type    string `json:"type"`
+	Media   string `json:"media"`
+	Caption string `json:"caption"`
+}
