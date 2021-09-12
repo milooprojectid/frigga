@@ -37,6 +37,8 @@ func generatemessage(data BroadcastMessage) c.Message {
 	switch data.Type {
 	case c.ImageMessageType:
 		message = c.GenerateImageMessage(data.Body)
+	case c.AlbumMessageType:
+		message = c.GenerateAlbumMessage(data.Body, *data.Album)
 	default:
 		message = c.GenerateTextMessage(data.Body)
 	}
@@ -138,7 +140,7 @@ func SendDirectMessageHandler(ctx iris.Context) {
 
 	ctx.JSON(map[string]interface{}{
 		"message": "message sent",
-		"data":    session,
+		"data":    session.Name,
 	})
 }
 
