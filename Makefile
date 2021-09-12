@@ -12,6 +12,6 @@ run:
 	$(CC) run ./**.go
 
 run-build: build
-	./sync-pubsub
+	./main
 
 clean-build: install build
