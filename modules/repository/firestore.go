@@ -158,6 +158,21 @@ func GetAllBotSessions(isProd bool) ([]BotSession, error) {
 	return botSessions, nil
 }
 
+// GetBotSession ...
+func GetBotSession(sessionId string) (BotSession, error) {
+	var session BotSession
+	ctx := context.Background()
+
+	doc, err := d.FS.Collection("bot_sessions").Doc(sessionId).Get(ctx)
+	if err != nil {
+		return session, err
+	}
+
+	doc.DataTo(&session)
+
+	return session, nil
+}
+
 // GetAllBotFeatures ...
 func GetAllBotFeatures(status string) ([]BotFeature, error) {
 	BotFeatures := []BotFeature{}
