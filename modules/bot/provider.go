@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	c "frigga/modules/common"
+	"frigga/modules/providers/discord"
 	line "frigga/modules/providers/line"
 	messenger "frigga/modules/providers/messenger"
 	telegram "frigga/modules/providers/telegram"
@@ -125,6 +126,15 @@ func GetProvider(name string) Provider {
 				},
 			}
 		}
+
+	case discord.Name:
+		{
+			provider = Provider{
+				Name:        name,
+				AccessToken: "", // TODO: IMPLEMENT
+			}
+		}
+
 	}
 
 	return provider

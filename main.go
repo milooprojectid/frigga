@@ -10,6 +10,7 @@ import (
 	bot "frigga/modules/bot"
 	driver "frigga/modules/driver"
 	http "frigga/modules/httphandler"
+	d "frigga/modules/providers/discord"
 	m "frigga/modules/providers/messenger"
 	service "frigga/modules/service"
 )
@@ -35,6 +36,12 @@ func newApp() *iris.Application {
 	messengerPath := "/messenger/" + os.Getenv("MESSENGER_SECRET")
 	app.Post(messengerPath, messengerBot.Handler)
 	app.Get(messengerPath, m.VerifySignature)
+	// ---
+
+	// DISCORD HANDLER
+	discord := bot.GetProvider("discord")
+	discordBot := bot.New(discord)
+	app.Post("/discord", d.VerifySignature, discordBot.Handler)
 	// ---
 
 	// HTTP HANDLERS
