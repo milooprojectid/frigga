@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -148,13 +147,12 @@ func GetProvider(name string) Provider {
 					requests, _ := discord.EventAdapter(ctx)
 					for _, request := range requests {
 						events = append(events, BotEvent{
-							ID:       request.Member.User.ID,
-							Message:  c.GenerateTextMessage(trim(discord.ConvertDataToInlineCommand(request.Data))),
+							ID:       request.GetId(),
+							Message:  c.GenerateTextMessage(trim(request.Data.GetInlineCommand())),
 							Token:    request.Token,
 							Provider: discord.Name,
 						})
 					}
-					fmt.Println(events)
 					return events, nil
 				},
 				EventReplier: func(rep BotReply) {

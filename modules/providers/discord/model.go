@@ -38,17 +38,19 @@ type Data struct {
 	ID      string                                    `json:"id"`
 }
 
+type User struct {
+	ID            string `json:"id"`
+	Username      string `json:"username"`
+	Avatar        string `json:"avatar"`
+	Discriminator string `json:"discriminator"`
+	PublicFlags   int64  `json:"public_flags"`
+}
+
 type RequestData struct {
 	Type   InteractionType `json:"type"`
 	Token  string          `json:"token"`
 	Member struct {
-		User struct {
-			ID            string `json:"id"`
-			Username      string `json:"username"`
-			Avatar        string `json:"avatar"`
-			Discriminator string `json:"discriminator"`
-			PublicFlags   int64  `json:"public_flags"`
-		} `json:"user"`
+		User         User      `json:"user"`
 		Roles        []string  `json:"roles"`
 		PremiumSince time.Time `json:"premium_since"`
 		Permissions  string    `json:"permissions"`
@@ -59,10 +61,12 @@ type RequestData struct {
 		IsPending    bool      `json:"is_pending"`
 		Deaf         bool      `json:"deaf"`
 	} `json:"member"`
-	ID        string `json:"id"`
-	GuildID   string `json:"guild_id"`
-	Data      Data   `json:"data"`
-	ChannelID string `json:"channel_id"`
+	User          User   `json:"user"`
+	ID            string `json:"id"`
+	ApplicationID string `json:"application_id"`
+	GuildID       string `json:"guild_id"`
+	Data          Data   `json:"data"`
+	ChannelID     string `json:"channel_id"`
 }
 
 func (data *RequestData) ResponseURL() string {
@@ -85,4 +89,21 @@ type InteractionApplicationCommandCallbackData struct {
 	Content         string           `json:"content"`
 	Embeds          json.Unmarshaler `json:"embeds,omitempty"`
 	AllowedMentions json.Unmarshaler `json:"allowed_mentions,omitempty"`
+}
+
+func (data *Data) GetInlineCommand() string {
+	command := "/" + data.Name
+
+	if len(data.Options) != 0 {
+		return command + " " + fmt.Sprintf("%v", data.Options[0].Value)
+	}
+
+	return command
+}
+
+func (r *RequestData) GetId() string {
+	if r.GuildID != "" {
+		return r.Member.User.ID
+	}
+	return r.User.ID
 }
