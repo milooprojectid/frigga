@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -17,14 +18,21 @@ import (
 
 // Provider ...
 type Provider struct {
-	Name         string
-	AccessToken  string
-	EventAdapter func(ctx iris.Context) ([]BotEvent, error)
-	EventReplier func(rep BotReply)
+	Name           string
+	AccessToken    string
+	EventAdapter   func(ctx iris.Context) ([]BotEvent, error)
+	EventReplier   func(rep BotReply)
+	StaticResponse map[string]interface{}
 }
 
 func trim(input string) string {
 	return strings.TrimRight(input, "\t \n")
+}
+
+func getDefaultResponse() map[string]interface{} {
+	return map[string]interface{}{
+		"message": "event dispatched",
+	}
 }
 
 // GetProvider ...
@@ -59,6 +67,7 @@ func GetProvider(name string) Provider {
 						telegram.EventReplier(message, replyMarkup, rep.Token)
 					}
 				},
+				StaticResponse: getDefaultResponse(),
 			}
 
 		}
@@ -97,6 +106,7 @@ func GetProvider(name string) Provider {
 						log.Printf(err.Error())
 					}
 				},
+				StaticResponse: getDefaultResponse(),
 			}
 
 		}
@@ -124,6 +134,7 @@ func GetProvider(name string) Provider {
 						messenger.EventReplier(message, quickReplies, rep.Token)
 					}
 				},
+				StaticResponse: getDefaultResponse(),
 			}
 		}
 
@@ -131,7 +142,32 @@ func GetProvider(name string) Provider {
 		{
 			provider = Provider{
 				Name:        name,
-				AccessToken: "", // TODO: IMPLEMENT
+				AccessToken: os.Getenv("DISCORD_PUBLIC_KEY"),
+				EventAdapter: func(ctx iris.Context) ([]BotEvent, error) {
+					var events []BotEvent
+					requests, _ := discord.EventAdapter(ctx)
+					for _, request := range requests {
+						events = append(events, BotEvent{
+							ID:       request.Member.User.ID,
+							Message:  c.GenerateTextMessage(trim(discord.ConvertDataToInlineCommand(request.Data))),
+							Token:    request.Token,
+							Provider: discord.Name,
+						})
+					}
+					fmt.Println(events)
+					return events, nil
+				},
+				EventReplier: func(rep BotReply) {
+					for i, message := range rep.Messages {
+						discord.EventReplier(message, rep.Token, i == 0)
+					}
+				},
+				StaticResponse: map[string]interface{}{
+					"type": 5, // deffered
+					"data": map[string]interface{}{
+						"content": "Processing command!",
+					},
+				},
 			}
 		}
 

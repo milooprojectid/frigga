@@ -73,5 +73,5 @@ func main() {
 
 	app := newApp()
 	port := os.Getenv("APP_PORT")
-	app.Run(iris.Addr(":" + port))
+	app.Run(iris.Addr(":"+port), iris.WithoutBodyConsumptionOnUnmarshal)
 }

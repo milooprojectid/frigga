@@ -5,8 +5,11 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
+	c "frigga/modules/common"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/kataras/iris"
@@ -24,9 +27,8 @@ func VerifySignature(ctx iris.Context) {
 		return
 	}
 
-	defer ctx.Request().Body.Close()
-	var data Data
-	if err := json.NewDecoder(ctx.Request().Body).Decode(&data); err != nil {
+	var data RequestData
+	if err := ctx.ReadJSON(&data); err != nil {
 		ctx.StatusCode(500)
 		ctx.Text("error decoding data")
 		return
@@ -39,6 +41,7 @@ func VerifySignature(ctx iris.Context) {
 		return
 	}
 
+	ctx.Next()
 }
 
 func verify(ctx iris.Context, key ed25519.PublicKey) bool {
@@ -80,4 +83,61 @@ func verify(ctx iris.Context, key ed25519.PublicKey) bool {
 	}
 
 	return ed25519.Verify(key, msg.Bytes(), sig)
+}
+
+// EventAdapter ...
+func EventAdapter(ctx iris.Context) ([]RequestData, error) {
+	var request RequestData
+
+	if err := ctx.ReadJSON(&request); err != nil {
+		fmt.Println(err)
+		return []RequestData{
+			request,
+		}, err
+	}
+
+	return []RequestData{
+		request,
+	}, nil
+}
+
+// EventReplier ...
+func EventReplier(message c.Message, token string, isFirst bool) error {
+	client := &http.Client{}
+	appId := os.Getenv("DISCORD_APP_ID")
+
+	requestBody, _ := json.Marshal(map[string]interface{}{
+		"content": message.Text,
+	})
+	buffer := bytes.NewBuffer(requestBody)
+
+	var apiURL string
+	var req *http.Request
+
+	if isFirst {
+		apiURL = fmt.Sprintf("https://discord.com/api/v8/webhooks/%s/%s/messages/@original", appId, token)
+		req, _ = http.NewRequest(http.MethodPatch, apiURL, buffer)
+	} else {
+		apiURL = fmt.Sprintf("https://discord.com/api/v8/webhooks/%s/%s", appId, token)
+		req, _ = http.NewRequest(http.MethodPost, apiURL, buffer)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	if _, err := client.Do(req); err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func ConvertDataToInlineCommand(data Data) string {
+	command := "/" + data.Name
+
+	if len(data.Options) != 0 {
+		return command + " " + fmt.Sprintf("%v", data.Options[0].Value)
+	}
+
+	return command
 }
