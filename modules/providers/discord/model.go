@@ -33,6 +33,12 @@ type InteractionResponseFlags int64
 const Ephemeral InteractionResponseFlags = 1 << 6
 
 type Data struct {
+	Options []ApplicationCommandInteractionDataOption `json:"options"`
+	Name    string                                    `json:"name"`
+	ID      string                                    `json:"id"`
+}
+
+type RequestData struct {
 	Type   InteractionType `json:"type"`
 	Token  string          `json:"token"`
 	Member struct {
@@ -53,17 +59,13 @@ type Data struct {
 		IsPending    bool      `json:"is_pending"`
 		Deaf         bool      `json:"deaf"`
 	} `json:"member"`
-	ID      string `json:"id"`
-	GuildID string `json:"guild_id"`
-	Data    struct {
-		Options []ApplicationCommandInteractionDataOption `json:"options"`
-		Name    string                                    `json:"name"`
-		ID      string                                    `json:"id"`
-	} `json:"data"`
+	ID        string `json:"id"`
+	GuildID   string `json:"guild_id"`
+	Data      Data   `json:"data"`
 	ChannelID string `json:"channel_id"`
 }
 
-func (data *Data) ResponseURL() string {
+func (data *RequestData) ResponseURL() string {
 	return fmt.Sprintf("https://discord.com/api/v8/interactions/%s/%s/callback", data.ID, data.Token)
 }
 

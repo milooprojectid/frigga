@@ -37,9 +37,7 @@ func (b *Bot) Handler(ctx iris.Context) {
 		}
 	}
 
-	ctx.JSON(map[string]string{
-		"message": "event dispatched",
-	})
+	ctx.JSON(b.Provider.StaticResponse)
 }
 
 // New ...
