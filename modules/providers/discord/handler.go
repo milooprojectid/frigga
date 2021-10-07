@@ -90,7 +90,6 @@ func EventAdapter(ctx iris.Context) ([]RequestData, error) {
 	var request RequestData
 
 	if err := ctx.ReadJSON(&request); err != nil {
-		fmt.Println(err)
 		return []RequestData{
 			request,
 		}, err
@@ -125,7 +124,6 @@ func EventReplier(message c.Message, token string, isFirst bool) error {
 	req.Header.Set("Content-Type", "application/json")
 
 	if _, err := client.Do(req); err != nil {
-		fmt.Println(err)
 		return err
 	}
 
