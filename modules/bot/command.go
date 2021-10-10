@@ -207,6 +207,13 @@ func RegisterCommands() {
 		Feedback: hadistCommandFeedback,
 	}
 
+	parrotCommand := Command{
+		Name:     "Parrot",
+		Path:     "/parrot",
+		Trigger:  parrotCommandTrigger,
+		Feedback: parrotCommandFeedback,
+	}
+
 	// initialize to singletons
 	Commands = commands{
 		startCommand,
@@ -218,5 +225,6 @@ func RegisterCommands() {
 		covid19SubscriptionCommand,
 		aboutCommand,
 		hadistCommand,
+		parrotCommand,
 	}
 }

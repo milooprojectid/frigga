@@ -279,3 +279,25 @@ func hadistCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Message,
 
 	return c.GenerateTextMessages(messages), nil
 }
+
+// Hadist Retrieval
+func parrotCommandTrigger(event BotEvent) ([]c.Message, error) {
+	repo.UpdateSession(event.ID, "/parrot")
+	return c.GenerateTextMessages([]string{
+		"Type something plase",
+	}), nil
+}
+
+// Hadist Retrieval
+func parrotCommandFeedback(event BotEvent, payload ...interface{}) ([]c.Message, error) {
+	ID := event.ID
+	input := payload[0].(string)
+
+	messages := []string{input}
+	cmd := "/parrot"
+
+	repo.LogSession(ID, cmd, input, input) // store input as output
+	repo.UpdateSession(ID, "")
+
+	return c.GenerateTextMessages(messages), nil
+}
