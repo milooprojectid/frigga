@@ -1,7 +1,6 @@
 package discord
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -69,26 +68,10 @@ type RequestData struct {
 	ChannelID     string `json:"channel_id"`
 }
 
-func (data *RequestData) ResponseURL() string {
-	return fmt.Sprintf("https://discord.com/api/v8/interactions/%s/%s/callback", data.ID, data.Token)
-}
-
 type ApplicationCommandInteractionDataOption struct {
 	Name    string                                    `json:"name"`
 	Value   interface{}                               `json:"value,omitempty"`
 	Options []ApplicationCommandInteractionDataOption `json:"options,omitempty"`
-}
-
-type InteractionResponse struct {
-	Type InteractionResponseType                    `json:"type"`
-	Data *InteractionApplicationCommandCallbackData `json:"data,omitempty"`
-}
-
-type InteractionApplicationCommandCallbackData struct {
-	TTS             *bool            `json:"tts,omitempty"`
-	Content         string           `json:"content"`
-	Embeds          json.Unmarshaler `json:"embeds,omitempty"`
-	AllowedMentions json.Unmarshaler `json:"allowed_mentions,omitempty"`
 }
 
 func (data *Data) GetInlineCommand() string {
